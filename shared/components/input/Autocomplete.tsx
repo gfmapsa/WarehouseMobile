@@ -1,11 +1,11 @@
 import { Colors } from "@/shared/constants/colors";
 import React, { useState } from "react";
 import {
-    FlatList,
-    LayoutChangeEvent,
-    StyleSheet,
-    TouchableOpacity,
-    View,
+  FlatList,
+  LayoutChangeEvent,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { ActivityIndicator, TextInput } from "react-native-paper";
 import AppText from "../text/AppText";

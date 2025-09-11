@@ -1,37 +1,36 @@
-import { forwardRef, useImperativeHandle, useRef } from "react";
-import { ScrollView, ScrollViewProps, StyleSheet } from "react-native";
+import { forwardRef, RefObject } from "react";
+import { ScrollView, ScrollViewProps, StyleSheet, View } from "react-native";
+import useMapRefs, { WarehouseMapHandle } from "../hooks/useMapRefs";
 import WarehouseLateral from "./WarehouseLateral";
 import WarehouseStands from "./WarehouseStands";
 
-export type WarehouseMapHandle = {
-  scrollTo: (x: number, y: number) => void;
+type Props = ScrollViewProps & {
+  children?: React.ReactNode;
+  itemsRef: RefObject<Record<string, View | null>>;
 };
 
-type Props = ScrollViewProps;
+const WarehouseMapBase = forwardRef<WarehouseMapHandle, Props>(
+  ({ itemsRef, children, ...props }, ref) => {
+    const { verticalScrollRef, horizontalScrollRef } = useMapRefs(
+      ref,
+      itemsRef
+    );
 
-const WarehouseMapBase = forwardRef<WarehouseMapHandle, Props>((props, ref) => {
-  const verticalScrollRef = useRef<ScrollView | null>(null);
-  const horizontalScrollRef = useRef<ScrollView | null>(null);
-
-  useImperativeHandle(ref, () => ({
-    scrollTo: (x: number, y: number) => {
-      verticalScrollRef.current?.scrollTo({ y, animated: true });
-      horizontalScrollRef.current?.scrollTo({ x, animated: true });
-    },
-  }));
-
-  return (
-    <ScrollView ref={verticalScrollRef} showsVerticalScrollIndicator={false}>
-      <ScrollView
-        ref={horizontalScrollRef}
-        {...props}
-        horizontal
-        contentContainerStyle={styles.container}
-        showsHorizontalScrollIndicator={false}
-      />
-    </ScrollView>
-  );
-});
+    return (
+      <ScrollView ref={verticalScrollRef} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          ref={horizontalScrollRef}
+          {...props}
+          horizontal
+          contentContainerStyle={styles.container}
+          showsHorizontalScrollIndicator={false}
+        >
+          {children}
+        </ScrollView>
+      </ScrollView>
+    );
+  }
+);
 
 WarehouseMapBase.displayName = "WarehouseMap";
 
@@ -41,7 +40,6 @@ type WarehouseMapComponent = typeof WarehouseMapBase & {
 };
 
 const WarehouseMap = WarehouseMapBase as WarehouseMapComponent;
-
 WarehouseMap.Stands = WarehouseStands;
 WarehouseMap.Lateral = WarehouseLateral;
 

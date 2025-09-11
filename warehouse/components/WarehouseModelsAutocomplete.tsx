@@ -1,26 +1,28 @@
 import Autocomplete from "@/shared/components/input/Autocomplete";
-import React, { useState } from "react";
+import useAutoScroll from "../hooks/useAutoScroll";
 import useSearchModel from "../hooks/useSearchModel";
-import { WarehouseSectionProps } from "./WarehouseLayout";
+import { WarehouseSearchProps } from "./WarehouseLayout";
 import WarehouseSearchOption from "./WarehouseSearchOption";
 
 export default function WarehouseModelsAutocomplete({
   cells,
   itemsRef,
-}: WarehouseSectionProps) {
+  onSelect,
+}: WarehouseSearchProps) {
   const { filteredModels, handleSearch, isLoading } = useSearchModel(cells);
-  //const { handleChange } = useAnimateCell(cells, "model", itemsRef);
-
-  const [value, setValue] = useState("");
+  const { handleSelect, value, setValue } = useAutoScroll(
+    { cells, itemsRef, onSelect },
+    "model"
+  );
 
   return (
     <Autocomplete
       label="Maqueta"
       data={filteredModels}
-      value={value}
+      value={value ?? ""}
       setValue={setValue}
       onSearch={handleSearch}
-      onSelect={() => {}}
+      onSelect={handleSelect}
       loading={isLoading}
       getLabel={(item) => item.mda}
       renderOption={(item) => {

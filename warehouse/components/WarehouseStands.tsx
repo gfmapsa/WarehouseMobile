@@ -7,11 +7,22 @@ const COLUMNS = 8;
 const GAP = 4;
 const CELL = WAREHOUSE_CELL_SIZE + GAP;
 
-export default function WarehouseStands({ cells }: WarehouseSectionProps) {
+export default function WarehouseStands({
+  cells,
+  itemsRef,
+}: WarehouseSectionProps) {
   return (
     <View style={styles.container}>
       {cells.map((cell) => (
-        <WarehouseItem key={cell.id} cell={cell} />
+        <WarehouseItem
+          key={cell.id}
+          cell={cell}
+          ref={(el) => {
+            if (itemsRef && itemsRef.current) {
+              itemsRef.current[cell.id] = el;
+            }
+          }}
+        />
       ))}
     </View>
   );

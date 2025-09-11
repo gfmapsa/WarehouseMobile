@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { WarehouseCell } from "../models/WarehouseCell";
@@ -11,11 +11,11 @@ type Props = {
   cell: WarehouseCell;
 };
 
-export default function WarehouseItem({ cell }: Props) {
+const WarehouseItem = forwardRef<View, Props>(({ cell }, ref) => {
   const isEmpty = cell.models.length === 0;
 
   return (
-    <View style={styles.container}>
+    <View ref={ref} style={styles.container}>
       {isEmpty ? (
         <WarehouseEmptyCell />
       ) : (
@@ -23,7 +23,9 @@ export default function WarehouseItem({ cell }: Props) {
       )}
     </View>
   );
-}
+});
+
+WarehouseItem.displayName = "WarehouseItem";
 
 const styles = StyleSheet.create({
   container: {
@@ -40,3 +42,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
+export default WarehouseItem;

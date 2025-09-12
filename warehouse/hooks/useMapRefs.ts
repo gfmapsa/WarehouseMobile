@@ -1,5 +1,6 @@
 import { RefObject, useImperativeHandle, useRef } from "react";
 import { ScrollView, View } from "react-native";
+import { WarehouseItemHandle } from "../components/WarehouseItem";
 
 export type WarehouseMapHandle = {
   scrollTo: (x: number, y: number) => void;
@@ -50,7 +51,7 @@ export default function useMapRefs(
         );
 
         if ("animateHighlight" in itemRef) {
-          itemRef.animateHighlight();
+          (itemRef as WarehouseItemHandle).animateHighlight();
         }
       } else {
         console.log("Item ref or scroll view ref is missing.");

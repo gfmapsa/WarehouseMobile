@@ -38,16 +38,20 @@ const WarehouseItem = forwardRef<WarehouseItemHandle, Props>(
 
     const scale = useSharedValue(1);
     const bgColor = useSharedValue(BG_COLOR);
+    const zIndex = useSharedValue(1);
 
     const animatedStyle = useAnimatedStyle(() => ({
       transform: [{ scale: scale.value }],
       backgroundColor: bgColor.value,
+      zIndex: zIndex.value,
     }));
 
     const isEmpty = cell.models.length === 0;
 
     useImperativeHandle(ref, () => ({
       animateHighlight: () => {
+        zIndex.value = withTiming(10, { duration: 0 });
+
         scale.value = withTiming(1.2, { duration: TIMING }, () => {
           scale.value = withDelay(DELAY, withTiming(1, { duration: TIMING }));
         });
@@ -55,7 +59,9 @@ const WarehouseItem = forwardRef<WarehouseItemHandle, Props>(
         bgColor.value = withTiming(SUCCESS_COLOR, { duration: TIMING }, () => {
           bgColor.value = withDelay(
             DELAY,
-            withTiming(BG_COLOR, { duration: TIMING })
+            withTiming(BG_COLOR, { duration: TIMING }, () => {
+              zIndex.value = withTiming(1, { duration: 0 });
+            })
           );
         });
       },

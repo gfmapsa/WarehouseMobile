@@ -1,6 +1,8 @@
 import { StyleSheet, View, ViewProps } from "react-native";
+import WarehouseActions from "./WarehouseActions";
 import WarehouseMap from "./WarehouseMap";
 import WarehouseSearch from "./WarehouseSearch";
+import WarehouseSkeleton from "./WarehouseSkeleton";
 
 export default function Warehouse({ style, ...props }: ViewProps) {
   return <View {...props} style={[styles.container, style]} />;
@@ -15,3 +17,5 @@ const styles = StyleSheet.create({
 
 Warehouse.Map = WarehouseMap;
 Warehouse.Search = WarehouseSearch;
+Warehouse.Loading = WarehouseSkeleton;
+Warehouse.Actions = WarehouseActions;

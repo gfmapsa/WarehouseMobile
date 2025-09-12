@@ -1,4 +1,4 @@
-import AppText from "@/shared/components/text/AppText";
+import AppError from "@/shared/components/feedback/AppError";
 import React, { RefObject } from "react";
 import { View } from "react-native";
 import useScrollLayout from "../hooks/useScrollLayout";
@@ -24,19 +24,39 @@ export default function WarehouseLayout() {
   const { data, isLoading, isError } = useWarehouse();
   const { warehouseMapRef, itemsRef, scrollToCell } = useScrollLayout();
 
-  if (isLoading || isError) return <AppText>upsi</AppText>;
-  if (!data) return;
+  if (isError) return <AppError />;
 
   return (
-    <Warehouse>
-      <Warehouse.Search>
-        <Warehouse.Search.Models cells={data.cells} onSelect={scrollToCell} />
-        <Warehouse.Search.Products cells={data.cells} onSelect={scrollToCell} />
-      </Warehouse.Search>
-      <Warehouse.Map ref={warehouseMapRef} itemsRef={itemsRef}>
-        <Warehouse.Map.Lateral cells={data.lateralCells} itemsRef={itemsRef} />
-        <Warehouse.Map.Stands cells={data.standCells} itemsRef={itemsRef} />
-      </Warehouse.Map>
-    </Warehouse>
+    <>
+      <Warehouse>
+        {isLoading || !data ? (
+          <Warehouse.Loading />
+        ) : (
+          <>
+            <Warehouse.Search>
+              <Warehouse.Search.Models
+                cells={data.cells}
+                onSelect={scrollToCell}
+              />
+              <Warehouse.Search.Products
+                cells={data.cells}
+                onSelect={scrollToCell}
+              />
+            </Warehouse.Search>
+            <Warehouse.Map ref={warehouseMapRef} itemsRef={itemsRef}>
+              <Warehouse.Map.Lateral
+                cells={data.lateralCells}
+                itemsRef={itemsRef}
+              />
+              <Warehouse.Map.Stands
+                cells={data.standCells}
+                itemsRef={itemsRef}
+              />
+            </Warehouse.Map>
+          </>
+        )}
+      </Warehouse>
+      {!isLoading && <Warehouse.Actions />}
+    </>
   );
 }

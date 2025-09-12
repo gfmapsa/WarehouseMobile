@@ -2,10 +2,10 @@ import { StyleSheet, View } from "react-native";
 import WarehouseItem, { WAREHOUSE_CELL_SIZE } from "./WarehouseItem";
 import { WarehouseSectionProps } from "./WarehouseLayout";
 
-const ROWS = 4;
-const COLUMNS = 8;
-const GAP = 4;
-const CELL = WAREHOUSE_CELL_SIZE + GAP;
+export const STANDS_ROWS = 4;
+export const STANDS_COLUMNS = 8;
+export const STANDS_GAP = 4;
+export const STANDS_CELL = WAREHOUSE_CELL_SIZE + STANDS_GAP;
 
 export default function WarehouseStands({
   cells,
@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: GAP,
-    width: CELL * COLUMNS,
-    height: CELL * ROWS,
+    gap: STANDS_GAP,
+    width: STANDS_CELL * STANDS_COLUMNS,
+    height: STANDS_CELL * STANDS_ROWS,
   },
 });

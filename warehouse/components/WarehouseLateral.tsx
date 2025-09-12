@@ -2,6 +2,8 @@ import { StyleSheet, View } from "react-native";
 import WarehouseItem from "./WarehouseItem";
 import { WarehouseSectionProps } from "./WarehouseLayout";
 
+export const LATERAL_GAP = 5;
+
 export default function WarehouseLateral({ cells }: WarehouseSectionProps) {
   return (
     <View style={styles.container}>
@@ -14,6 +16,6 @@ export default function WarehouseLateral({ cells }: WarehouseSectionProps) {
 
 const styles = StyleSheet.create({
   container: {
-    gap: 5,
+    gap: LATERAL_GAP,
   },
 });

@@ -1,4 +1,5 @@
 import { Colors } from "@/shared/constants/colors";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useState } from "react";
 import {
   FlatList,
@@ -9,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { ActivityIndicator, TextInput } from "react-native-paper";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import AppText from "../text/AppText";
 
 type AutocompleteProps<T> = {
@@ -22,6 +24,8 @@ type AutocompleteProps<T> = {
   getLabel: (item: T) => string;
   renderOption: (item: T) => React.ReactNode;
 };
+
+const RADIUS = 8;
 
 export default function Autocomplete<T>({
   label,
@@ -51,6 +55,12 @@ export default function Autocomplete<T>({
     setIsFocused(false);
   };
 
+  const handleClear = () => {
+    setValue("");
+    onSearch("");
+    setShowList(false);
+  };
+
   return (
     <View style={[styles.container, isFocused && { zIndex: 2000 }]}>
       <TextInput
@@ -74,26 +84,54 @@ export default function Autocomplete<T>({
         }
         onLayout={handleLayout}
         right={
-          loading ? <TextInput.Icon icon={() => <ActivityIndicator />} /> : null
+          loading ? (
+            <TextInput.Icon
+              icon={() => <ActivityIndicator color={Colors.primary} />}
+            />
+          ) : value.length > 0 ? (
+            <TextInput.Icon
+              icon={() => (
+                <Ionicons name="close" size={hp("2%")} color={Colors.primary} />
+              )}
+              onPress={handleClear}
+            />
+          ) : null
         }
         style={styles.input}
         underlineStyle={{ display: "none" }}
         textColor={Colors.primary}
         activeUnderlineColor={Colors.primary}
+        theme={{ roundness: RADIUS }}
       />
 
-      {showList && data.length > 0 && (
-        <FlatList
-          style={[styles.dropdown, { top: inputHeight }]}
-          keyboardShouldPersistTaps="handled"
-          data={data}
-          keyExtractor={(_, index) => index.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleSelectOption(item)}>
-              {renderOption(item)}
-            </TouchableOpacity>
+      {showList && (
+        <>
+          {data.length > 0 && !loading ? (
+            <FlatList
+              style={[styles.dropdown, { top: inputHeight }]}
+              keyboardShouldPersistTaps="handled"
+              data={data}
+              keyExtractor={(_, index) => index.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => handleSelectOption(item)}>
+                  {renderOption(item)}
+                </TouchableOpacity>
+              )}
+            />
+          ) : (
+            <View
+              style={[
+                styles.dropdown,
+                styles.fallbackDropdown,
+                { top: inputHeight },
+              ]}
+            >
+              <AppText style={styles.fallbackText}>
+                {loading ? "Buscando...." : "No se encontraron resultados"}
+              </AppText>
+            </View>
           )}
-        />
+        </>
       )}
     </View>
   );
@@ -110,7 +148,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "white",
     borderColor: Colors.primary,
-    borderRadius: 4,
+    borderRadius: RADIUS,
   },
 
   dropdown: {
@@ -121,5 +159,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
     elevation: 5,
+  },
+
+  fallbackDropdown: {
+    justifyContent: "center",
+    padding: 10,
+  },
+
+  fallbackText: {
+    color: Colors.primary,
   },
 });

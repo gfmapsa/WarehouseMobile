@@ -6,6 +6,9 @@ export type WarehouseMapHandle = {
   scrollToCell: (cellId: string) => void;
 };
 
+const OFFSET_X = 100;
+const OFFSET_Y = 80;
+
 export default function useMapRefs(
   ref: React.ForwardedRef<WarehouseMapHandle>,
   itemsRef: RefObject<Record<string, View | null>>
@@ -16,7 +19,10 @@ export default function useMapRefs(
   useImperativeHandle(ref, () => ({
     scrollTo: (x: number, y: number) => {
       verticalScrollRef.current?.scrollTo({ y, animated: true });
-      horizontalScrollRef.current?.scrollTo({ x, animated: true });
+      horizontalScrollRef.current?.scrollTo({
+        x,
+        animated: true,
+      });
     },
     scrollToCell: (cellId: string) => {
       const itemRef = itemsRef.current?.[cellId];
@@ -26,13 +32,26 @@ export default function useMapRefs(
         itemRef.measureLayout(
           scrollViewRef,
           (x, y) => {
-            verticalScrollRef.current?.scrollTo({ y, animated: true });
-            horizontalScrollRef.current?.scrollTo({ x, animated: true });
+            const scrollX = Math.max(0, x - OFFSET_X);
+            const scrollY = Math.max(0, y - OFFSET_Y);
+
+            verticalScrollRef.current?.scrollTo({
+              y: scrollY,
+              animated: true,
+            });
+            horizontalScrollRef.current?.scrollTo({
+              x: scrollX,
+              animated: true,
+            });
           },
           () => {
             console.log("Failed to measure layout");
           }
         );
+
+        if ("animateHighlight" in itemRef) {
+          itemRef.animateHighlight();
+        }
       } else {
         console.log("Item ref or scroll view ref is missing.");
       }

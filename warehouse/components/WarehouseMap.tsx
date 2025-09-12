@@ -17,7 +17,11 @@ const WarehouseMapBase = forwardRef<WarehouseMapHandle, Props>(
     );
 
     return (
-      <ScrollView ref={verticalScrollRef} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        ref={verticalScrollRef}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 200 }}
+      >
         <ScrollView
           ref={horizontalScrollRef}
           {...props}

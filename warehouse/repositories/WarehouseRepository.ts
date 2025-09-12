@@ -2,16 +2,16 @@ import { supabase } from "@/lib/supabaseClient";
 import { BACKEND_ERROR_MESSAGE } from "@/shared/constants/backend";
 import { getErrorMessage } from "@/shared/utils/functions";
 import {
-    MODEL_MDA_COLUMN,
-    MODEL_UBICATION_COLUMN,
-    MODEL_WAREHOUSE_ID,
-    MODELS_TABLE,
-    PRODUCT_X_MODEL_TABLE,
-    WAREHOUSE_CELL_TABLE,
+  MODEL_MDA_COLUMN,
+  MODEL_UBICATION_COLUMN,
+  MODEL_WAREHOUSE_ID,
+  MODELS_TABLE,
+  PRODUCT_X_MODEL_TABLE,
+  WAREHOUSE_CELL_TABLE,
 } from "../constants/backend";
 import {
-    IWarehouseRepository,
-    WarehouseResponse,
+  IWarehouseRepository,
+  WarehouseResponse,
 } from "../interfaces/IWarehouseRepository";
 import { Model, ModelUbicationEnum } from "../models/Model";
 import { ProductSearch } from "../models/ProductSearch";

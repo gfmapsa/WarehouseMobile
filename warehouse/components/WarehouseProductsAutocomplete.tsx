@@ -1,27 +1,29 @@
 //import useAnimateCell from "@/hooks/useAnimateCell";
 import Autocomplete from "@/shared/components/input/Autocomplete";
-import React, { useState } from "react";
+import useAutoScroll from "../hooks/useAutoScroll";
 import useSearchProduct from "../hooks/useSearchProduct";
-import { WarehouseSectionProps } from "./WarehouseLayout";
+import { WarehouseSearchProps } from "./WarehouseLayout";
 import WarehouseSearchOption from "./WarehouseSearchOption";
 
 export default function WarehouseProductsAutocomplete({
   cells,
   itemsRef,
-}: WarehouseSectionProps) {
+  onSelect,
+}: WarehouseSearchProps) {
   const { filteredProducts, handleSearch, isLoading } = useSearchProduct(cells);
-  //const { handleChange } = useAnimateCell(cells, "product", itemsRef);
-
-  const [value, setValue] = useState("");
+  const { handleSelect, value, setValue } = useAutoScroll(
+    { cells, itemsRef, onSelect },
+    "product"
+  );
 
   return (
     <Autocomplete
       label="Pieza"
       data={filteredProducts}
-      value={value}
+      value={value ?? ""}
       setValue={setValue}
       onSearch={handleSearch}
-      onSelect={() => {}}
+      onSelect={handleSelect}
       loading={isLoading}
       getLabel={(item) => item.cod}
       renderOption={(item) => {

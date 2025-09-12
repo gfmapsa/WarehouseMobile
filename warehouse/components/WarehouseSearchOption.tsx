@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { ModelUbicationEnum } from "../models/Model";
 import { WarehouseCell } from "../models/WarehouseCell";
 import WarehouseCellSearch from "./WarehouseCellSearch";
@@ -16,12 +16,10 @@ export default function WarehouseSearchOption({
   ubication,
 }: Props) {
   return (
-    <Pressable
-      style={({ pressed }) => [styles.container, pressed && styles.pressed]}
-    >
+    <View style={styles.container}>
       <WarehouseSearchOptionTitle title={title} />
       <WarehouseCellSearch cell={cell} ubication={ubication} />
-    </Pressable>
+    </View>
   );
 }
 
@@ -32,9 +30,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     gap: 2,
-  },
-
-  pressed: {
-    backgroundColor: "#ddd",
   },
 });

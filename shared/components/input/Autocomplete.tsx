@@ -2,6 +2,7 @@ import { Colors } from "@/shared/constants/colors";
 import React, { useState } from "react";
 import {
   FlatList,
+  Keyboard,
   LayoutChangeEvent,
   StyleSheet,
   TouchableOpacity,
@@ -42,6 +43,14 @@ export default function Autocomplete<T>({
     setInputHeight(height);
   };
 
+  const handleSelectOption = (item: T) => {
+    Keyboard.dismiss();
+    setValue(getLabel(item));
+    onSelect(item);
+    setShowList(false);
+    setIsFocused(false);
+  };
+
   return (
     <View style={[styles.container, isFocused && { zIndex: 2000 }]}>
       <TextInput
@@ -55,7 +64,7 @@ export default function Autocomplete<T>({
         }}
         onFocus={() => {
           setIsFocused(true);
-          setShowList(true); // ⬅️ Nuevo: muestra la lista al enfocar
+          setShowList(true);
         }}
         onBlur={() =>
           setTimeout(() => {
@@ -72,26 +81,19 @@ export default function Autocomplete<T>({
         textColor={Colors.primary}
         activeUnderlineColor={Colors.primary}
       />
+
       {showList && data.length > 0 && (
-        <View style={[styles.dropdown, { top: inputHeight }]}>
-          <FlatList
-            keyboardShouldPersistTaps="handled"
-            data={data}
-            keyExtractor={(_, index) => index.toString()}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => {
-                  setValue(getLabel(item));
-                  onSelect(item);
-                  setShowList(false);
-                  setIsFocused(false);
-                }}
-              >
-                {renderOption(item)}
-              </TouchableOpacity>
-            )}
-          />
-        </View>
+        <FlatList
+          style={[styles.dropdown, { top: inputHeight }]}
+          keyboardShouldPersistTaps="handled"
+          data={data}
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => handleSelectOption(item)}>
+              {renderOption(item)}
+            </TouchableOpacity>
+          )}
+        />
       )}
     </View>
   );
@@ -118,7 +120,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderWidth: 1,
     borderColor: "#ccc",
-    maxHeight: 200,
-    zIndex: 1000,
+    elevation: 5,
   },
 });

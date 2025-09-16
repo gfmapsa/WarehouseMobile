@@ -1,8 +1,7 @@
-import AppHeader from "@/shared/components/header/AppHeader";
 import useLoadFonts from "@/shared/hooks/useLoadFonts";
 import TanstackProvider from "@/warehouse/context/TanstackProvider";
 import WarehouseProvider from "@/warehouse/context/WarehouseProvider";
-import { Drawer } from "expo-router/drawer";
+import { Stack } from "expo-router";
 import { PropsWithChildren } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { PaperProvider } from "react-native-paper";
@@ -29,10 +28,16 @@ function RootProvider({ children }: PropsWithChildren) {
 export default function RootLayout() {
   return (
     <RootProvider>
-      <Drawer screenOptions={{ header: (props) => <AppHeader {...props} /> }}>
-        <Drawer.Screen name="index" options={{ title: "Deposito" }} />
-        <Drawer.Screen name="other" />
-      </Drawer>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          gestureEnabled: false,
+          gestureDirection: "vertical",
+        }}
+      >
+        <Stack.Screen name="(drawer)" />
+        <Stack.Screen name="scanner" />
+      </Stack>
     </RootProvider>
   );
 }

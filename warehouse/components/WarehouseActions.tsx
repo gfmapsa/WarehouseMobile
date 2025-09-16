@@ -1,28 +1,27 @@
 import { Colors } from "@/shared/constants/colors";
 import React from "react";
 import { StyleSheet } from "react-native";
-import { AnimatedFAB } from "react-native-paper";
+import { FAB } from "react-native-paper";
 import {
-    heightPercentageToDP as hp,
-    widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
+import useQrScanner from "../hooks/useQrScanner";
 
 export default function WarehouseActions() {
+  const { addModel, removeModel } = useQrScanner();
+
   return (
     <>
-      <AnimatedFAB
-        extended={false}
+      <FAB
         icon={"plus"}
-        label={"Label"}
-        onPress={() => console.log("Pressed")}
+        onPress={addModel}
         style={[styles.fabStyle, styles.plus]}
         color={Colors.primary}
       />
-      <AnimatedFAB
-        extended={false}
+      <FAB
         icon={"minus"}
-        label={"Label"}
-        onPress={() => console.log("Pressed")}
+        onPress={removeModel}
         style={[styles.fabStyle, styles.minus]}
         color={Colors.primary}
       />
@@ -31,21 +30,18 @@ export default function WarehouseActions() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-  },
-
   fabStyle: {
     position: "absolute",
     right: wp("5%"),
     backgroundColor: "#DDD",
+    borderRadius: "50%",
   },
 
   plus: {
-    bottom: hp("13%"),
+    bottom: hp("16%"),
   },
 
   minus: {
-    bottom: hp("4%"),
+    bottom: hp("7%"),
   },
 });

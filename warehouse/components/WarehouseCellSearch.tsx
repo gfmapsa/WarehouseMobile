@@ -34,7 +34,7 @@ export default function WarehouseCellSearch({ cell, ubication }: Props) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    gap: 2,
+    gap: 6,
     alignItems: "center",
     flexWrap: "nowrap",
   },

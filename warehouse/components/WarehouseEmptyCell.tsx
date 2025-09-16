@@ -1,6 +1,6 @@
 import AppText from "@/shared/components/text/AppText";
 import { Colors } from "@/shared/constants/colors";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
@@ -8,7 +8,11 @@ import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 export default function WarehouseEmptyCell() {
   return (
     <View style={styles.container}>
-      <FontAwesome name="map-marker" size={hp("2%")} color={Colors.success} />
+      <MaterialCommunityIcons
+        name="map-marker-check"
+        size={hp("3%")}
+        color={Colors.successVariant}
+      />
       <AppText style={styles.text}>Espacio libre</AppText>
     </View>
   );
@@ -25,6 +29,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: hp("2%"),
     textAlign: "center",
-    color: Colors.success,
+    color: Colors.successVariant,
   },
 });

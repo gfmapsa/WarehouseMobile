@@ -1,10 +1,9 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import Tooltip from "react-native-walkthrough-tooltip";
-
 import AppText from "@/shared/components/text/AppText";
 import useTooltip from "@/shared/hooks/useTooltip";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import Tooltip from "react-native-walkthrough-tooltip";
 
 type Props = {
   products: string[];
@@ -28,7 +27,7 @@ export default function WarehouseModelProducts({ products }: Props) {
       arrowStyle={{ display: "none" }}
     >
       <TouchableOpacity onPress={toggleOpen}>
-        <Ionicons name="information-circle-outline" size={hp("2.5%")} />
+        <AntDesign name="info-circle" size={hp("2%")} />
       </TouchableOpacity>
     </Tooltip>
   );

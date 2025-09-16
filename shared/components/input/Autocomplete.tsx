@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderColor: Colors.primary,
     borderRadius: RADIUS,
+    elevation: 5,
   },
 
   dropdown: {

@@ -1,6 +1,6 @@
 import { Colors } from "@/shared/constants/colors";
 import React, { forwardRef, useImperativeHandle, useRef } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet } from "react-native"; // Importa 'View' de react-native
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -8,6 +8,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import { Shadow } from "react-native-shadow-2";
 import { WarehouseCell } from "../models/WarehouseCell";
 import WarehouseEmptyCell from "./WarehouseEmptyCell";
 import WarehouseFilledCell from "./WarehouseFilledCell";
@@ -75,13 +76,15 @@ const WarehouseItem = forwardRef<WarehouseItemHandle, Props>(
     }));
 
     return (
-      <Animated.View ref={viewRef} style={[styles.container, animatedStyle]}>
-        {isEmpty ? (
-          <WarehouseEmptyCell />
-        ) : (
-          <WarehouseFilledCell models={cell.models} />
-        )}
-      </Animated.View>
+      <Shadow distance={1} offset={[2, 2]}>
+        <Animated.View ref={viewRef} style={[styles.container, animatedStyle]}>
+          {isEmpty ? (
+            <WarehouseEmptyCell />
+          ) : (
+            <WarehouseFilledCell models={cell.models} />
+          )}
+        </Animated.View>
+      </Shadow>
     );
   }
 );
@@ -90,11 +93,6 @@ WarehouseItem.displayName = "WarehouseItem";
 
 const styles = StyleSheet.create({
   container: {
-    elevation: 5,
-    shadowColor: "black",
-    shadowOffset: { height: 2, width: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 3,
     backgroundColor: BG_COLOR,
     borderRadius: 8,
     width: WAREHOUSE_CELL_SIZE,

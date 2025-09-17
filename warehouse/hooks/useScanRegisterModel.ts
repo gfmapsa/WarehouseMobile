@@ -23,9 +23,9 @@ export default function useScanRegisterModel(
   });
 
   async function handleRegister(codes: Code[], _: CodeScannerFrame) {
-    if (!codes || codes.length === 0 || !mda) return;
+    if (!codes || codes.length === 0 || !codes[0].value || !mda) return;
 
-    const ubication = result.getText();
+    const ubication = codes[0].value;
 
     if (!ubication || isNaN(Number(ubication))) return;
 

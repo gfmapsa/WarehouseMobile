@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { Code, CodeScannerFrame } from "react-native-vision-camera";
 import { ModelScan } from "../dtos/warehouse";
+import useReloadWarehose from "../store/useReloadWarehouse";
 import useModelsRepository from "./useModelsRepository";
 import { WarehouseModelActions } from "./useQrScanner";
 import useScanRegisterModel from "./useScanRegisterModel";
@@ -78,11 +79,14 @@ export default function useModelScan(action: WarehouseModelActions) {
   const hasToRegister = scannedMda && mdasSet.size === 0;
   const registerScanned = isRegister && hasToRegister ? true : false;
 
-  function handleRefresh() {
+  const { reload } = useReloadWarehose();
+
+  async function handleRefresh() {
     setScanning(false);
     setScannedMda(undefined);
     setTrigger(false);
-    router.back();
+    router.push("/(drawer)");
+    reload && reload();
   }
 
   const { handleRegister, isRegistering } = useScanRegisterModel(

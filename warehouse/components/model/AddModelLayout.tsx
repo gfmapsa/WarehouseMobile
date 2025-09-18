@@ -1,27 +1,31 @@
 import AppAutocomplete from "@/shared/components/input/AppAutocomplete";
+import AppButton from "@/shared/components/input/AppButton";
 import FormText from "@/shared/components/input/FormText";
 import AppText from "@/shared/components/text/AppText";
 import useAddModel, { AddModelData } from "@/warehouse/hooks/useAddModel";
 import React from "react";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import {
+    heightPercentageToDP as hp,
+    widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
 
 export default function AddModelLayout() {
   const {
     control,
     handleSubmit,
     onSubmit,
-    //onHidde,
-    //snackbarVisible,
     isPending,
     message,
     partNumbers,
     isErrorMutating,
     isLoading,
     onChangeMda,
+    setSearchQuery,
   } = useAddModel();
 
   return (
-    <View>
+    <View style={styles.container}>
       <FormText
         control={control}
         name="mda"
@@ -34,9 +38,8 @@ export default function AddModelLayout() {
         label="Pieza"
         data={partNumbers ?? []}
         isLoading={isLoading}
-        onSearch={function (query: string): void {
-          console.log("holi");
-        }}
+        multiple
+        onSearch={setSearchQuery}
         getLabel={function (item: string): string {
           return item;
         }}
@@ -44,6 +47,15 @@ export default function AddModelLayout() {
           return <AppText>{item}</AppText>;
         }}
       />
+      <AppButton>Enviar</AppButton>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    paddingVertical: hp("5%"),
+    paddingHorizontal: wp("5%"),
+    gap: hp("5%"),
+  },
+});

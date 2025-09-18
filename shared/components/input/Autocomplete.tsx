@@ -1,6 +1,7 @@
 import { Colors } from "@/shared/constants/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import React, { useState } from "react";
+import * as Haptics from "expo-haptics";
+import { ReactNode, useState } from "react";
 import {
   FlatList,
   Keyboard,
@@ -9,17 +10,23 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { ActivityIndicator, TextInput } from "react-native-paper";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { ActivityIndicator, Chip, TextInput } from "react-native-paper";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
 import AppText from "../text/AppText";
 import AppInput, { AppInputProps } from "./AppInput";
 
 export type AutocompleteProps<T> = {
   data: T[];
   onSearch?: (query: string) => void;
-  onSelect?: (item: T) => void;
+  onSelect?: (item: T | T[]) => void;
   getLabel: (item: T) => string;
-  renderOption: (item: T) => React.ReactNode;
+  renderOption: (item: T) => ReactNode;
+  multiple?: boolean;
+  value: string | T[];
+  setValue: (val: string | T[]) => void;
 };
 
 export default function Autocomplete<T>({
@@ -31,11 +38,15 @@ export default function Autocomplete<T>({
   isLoading = false,
   getLabel,
   renderOption,
+  multiple = false,
   ...props
 }: AutocompleteProps<T> & AppInputProps) {
   const [showList, setShowList] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [inputHeight, setInputHeight] = useState(0);
+  const [currentSearchValue, setCurrentSearchValue] = useState("");
+
+  const selectedItems = Array.isArray(value) ? value : [];
 
   const handleLayout = (event: LayoutChangeEvent) => {
     const { height } = event.nativeEvent.layout;
@@ -44,26 +55,67 @@ export default function Autocomplete<T>({
 
   const handleSelectOption = (item: T) => {
     Keyboard.dismiss();
-    setValue(getLabel(item));
-    onSelect && onSelect(item);
     setShowList(false);
     setIsFocused(false);
+
+    if (multiple) {
+      if (
+        !selectedItems.some((selected) => getLabel(selected) === getLabel(item))
+      ) {
+        const newValue = [...selectedItems, item];
+        setValue(newValue);
+        onSelect && onSelect(newValue);
+      }
+      setCurrentSearchValue("");
+    } else {
+      const label = getLabel(item);
+      setValue(label);
+      onSelect && onSelect(item);
+    }
   };
 
   const handleClear = () => {
-    setValue("");
-    onSearch && onSearch("");
+    if (multiple) {
+      setValue([]);
+      setCurrentSearchValue("");
+    } else {
+      setValue("");
+      onSearch && onSearch("");
+    }
     setShowList(false);
   };
+
+  const handleRemoveChip = (itemToRemove: T) => {
+    Haptics.selectionAsync();
+
+    const updatedItems = selectedItems.filter(
+      (item) => getLabel(item) !== getLabel(itemToRemove)
+    );
+    setValue(updatedItems);
+  };
+
+  const showClearIcon = multiple
+    ? selectedItems.length > 0 || currentSearchValue.length > 0
+    : (value as string).length > 0;
 
   return (
     <View style={[styles.container, isFocused && { zIndex: 2000 }]}>
       <AppInput
         {...props}
-        value={value}
-        setValue={setValue}
+        value={multiple ? currentSearchValue : (value as string)}
+        setValue={
+          multiple
+            ? setCurrentSearchValue
+            : (val) => setValue(val as T[] | string)
+        }
         onChangeText={(text) => {
-          onSearch && onSearch(text);
+          if (multiple) {
+            setCurrentSearchValue(text);
+            onSearch && onSearch(text);
+          } else {
+            setValue(text);
+            onSearch && onSearch(text);
+          }
           setShowList(true);
         }}
         onFocus={() => {
@@ -82,7 +134,7 @@ export default function Autocomplete<T>({
             <TextInput.Icon
               icon={() => <ActivityIndicator color={Colors.primary} />}
             />
-          ) : value.length > 0 ? (
+          ) : showClearIcon ? (
             <TextInput.Icon
               icon={() => (
                 <Ionicons name="close" size={hp("2%")} color={Colors.primary} />
@@ -92,6 +144,20 @@ export default function Autocomplete<T>({
           ) : null
         }
       />
+
+      {multiple && selectedItems.length > 0 && (
+        <View style={styles.chipsContainer}>
+          {selectedItems.map((item, index) => (
+            <Chip
+              key={index.toString()}
+              onClose={() => handleRemoveChip(item)}
+              style={styles.chip}
+            >
+              <AppText>{getLabel(item)}</AppText>
+            </Chip>
+          ))}
+        </View>
+      )}
 
       {showList && (
         <>
@@ -151,5 +217,17 @@ const styles = StyleSheet.create({
 
   fallbackText: {
     color: Colors.primary,
+  },
+
+  chipsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginVertical: hp("2%"),
+  },
+
+  chip: {
+    marginRight: wp("1%"),
+    marginBottom: hp("2%"),
+    backgroundColor: Colors.primaryVariant,
   },
 });

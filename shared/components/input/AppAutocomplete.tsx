@@ -1,10 +1,15 @@
-import { Controller, FieldValues } from "react-hook-form";
+import { Control, Controller, FieldValues, Path } from "react-hook-form";
 import { HelperText } from "react-native-paper";
+import { AppInputProps } from "./AppInput";
 import Autocomplete, { AutocompleteProps } from "./Autocomplete";
-import { FormTextProps } from "./FormText";
+
+export type FormTextProps<T extends FieldValues> = {
+  name: Path<T>;
+  control: Control<T>;
+} & Omit<AppInputProps, "value" | "setValue">;
 
 export type AppAutocompleteProps<T extends FieldValues, O> = FormTextProps<T> &
-  AutocompleteProps<O>;
+  Omit<AutocompleteProps<O>, "value" | "setValue">;
 
 export default function AppAutocomplete<T extends FieldValues, O>({
   name,
@@ -21,9 +26,15 @@ export default function AppAutocomplete<T extends FieldValues, O>({
           <Autocomplete<O>
             {...props}
             getLabel={getLabel}
-            value={Array.isArray(field.value) ? "" : field.value || ""}
+            value={field.value}
             setValue={(val) => field.onChange(val)}
-            onSelect={(item) => field.onChange(getLabel(item))}
+            onSelect={(item) => {
+              if (props.multiple) {
+                field.onChange(item);
+              } else {
+                field.onChange(getLabel(item as O));
+              }
+            }}
           />
           {fieldState.error && (
             <HelperText type="error" visible>

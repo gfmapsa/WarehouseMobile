@@ -1,10 +1,9 @@
+import useModelsRepository from "@/warehouse/hooks/useModelsRepository";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-//import { useSnackbar } from "./useSnackbar";
-import useModelsRepository from "@/warehouse/hooks/useModelsRepository";
 import { getErrorMessage } from "../../shared/utils/functions";
 import { ADD_MODELS_KEY, GET_MODELS_KEY } from "../constants/backend";
 
@@ -31,6 +30,21 @@ export default function useAddModel(code?: string) {
 
   const { modelsRepository } = useModelsRepository();
 
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const { isLoading, data: allPartNumbers } = useQuery({
+    queryKey: [GET_MODELS_KEY],
+    queryFn: async () => modelsRepository.getPartNumbers(),
+  });
+
+  const partNumbers = allPartNumbers
+    ? allPartNumbers
+        .filter((part) =>
+          part.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+        .slice(0, 5)
+    : [];
+
   const {
     mutateAsync,
     isPending,
@@ -38,11 +52,6 @@ export default function useAddModel(code?: string) {
   } = useMutation({
     mutationKey: [ADD_MODELS_KEY],
     mutationFn: async (data: AddModelData) => modelsRepository.addModel(data),
-  });
-
-  const { isLoading, data: partNumbers } = useQuery({
-    queryKey: [GET_MODELS_KEY],
-    queryFn: async () => modelsRepository.getPartNumbers(),
   });
 
   function onChangeMda(text: string) {
@@ -54,8 +63,6 @@ export default function useAddModel(code?: string) {
 
   const [message, setMessage] = useState("");
 
-  //const { onHidde, onVisiblie, snackbarVisible } = useSnackbar();
-
   async function onSubmit(data: AddModelData) {
     try {
       await mutateAsync(data);
@@ -65,7 +72,6 @@ export default function useAddModel(code?: string) {
       setMessage(message);
     } finally {
       reset({ mda: "", partNumbers: [] });
-      //onVisiblie();
     }
   }
 
@@ -78,8 +84,7 @@ export default function useAddModel(code?: string) {
     message,
     isErrorMutating,
     isPending,
-    //onHidde,
-    //snackbarVisible,
     onChangeMda,
+    setSearchQuery,
   };
 }

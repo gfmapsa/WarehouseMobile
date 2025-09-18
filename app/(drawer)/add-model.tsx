@@ -1,10 +1,5 @@
-import React from 'react'
-import { Text, View } from 'react-native'
+import AddModelLayout from "@/warehouse/components/model/AddModelLayout";
 
 export default function AddModelScreen() {
-  return (
-    <View>
-      <Text>add-model</Text>
-    </View>
-  )
+  return <AddModelLayout />;
 }

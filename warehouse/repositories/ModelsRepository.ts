@@ -2,13 +2,15 @@ import { supabase } from "@/lib/supabaseClient";
 import { BACKEND_ERROR_MESSAGE } from "@/shared/constants/backend";
 import { getErrorMessage } from "@/shared/utils/functions";
 import {
-    MODEL_MDA_COLUMN,
-    MODEL_MODULES_COLUMN,
-    MODELS_TABLE,
-    PRODUCT_PRODUCT_COLUMN,
-    PRODUCTS_TABLE,
+  MODEL_MDA_COLUMN,
+  MODEL_MODULES_COLUMN,
+  MODELS_TABLE,
+  PRODUCT_PRODUCT_COLUMN,
+  PRODUCT_X_MODEL_TABLE,
+  PRODUCTS_TABLE,
 } from "../constants/backend";
 import { ModelScan } from "../dtos/warehouse";
+import { AddModelData } from "../hooks/useAddModel";
 import { IModelsRepository } from "../interfaces/IModelsRepository";
 
 export class ModelsRepository implements IModelsRepository {
@@ -55,6 +57,71 @@ export class ModelsRepository implements IModelsRepository {
       const products = data.map((product) => product.cod as string);
 
       return products;
+    } catch (error) {
+      const message = getErrorMessage(error);
+      throw new Error(message);
+    }
+  }
+
+  async addModel(model: AddModelData): Promise<void> {
+    try {
+      const { mda, partNumbers } = model;
+
+      if (!mda.toUpperCase().startsWith("MDA")) {
+        throw new Error("Ingrese un código válido por favor.");
+      }
+
+      const { data: existingModel, error: existingError } = await supabase
+        .from(MODELS_TABLE)
+        .select(MODEL_MDA_COLUMN)
+        .eq(MODEL_MDA_COLUMN, mda)
+        .maybeSingle();
+
+      if (existingError) {
+        throw new Error(BACKEND_ERROR_MESSAGE);
+      }
+
+      if (existingModel) {
+        throw new Error(`El modelo con código ${mda} ya existe.`);
+      }
+
+      const productsString = partNumbers.join("/");
+
+      const { data: modelData, error: modelError } = await supabase
+        .from(MODELS_TABLE)
+        .insert([
+          { mda, description: `MAQUETA DE ARMADO PN ${productsString}` },
+        ])
+        .select(MODEL_MDA_COLUMN)
+        .single();
+
+      if (modelError || !modelData) {
+        console.error("Error al insertar modelo:", modelError);
+        throw new Error(BACKEND_ERROR_MESSAGE);
+      }
+
+      const { data: products, error: productsError } = await supabase
+        .from(PRODUCTS_TABLE)
+        .select(PRODUCT_PRODUCT_COLUMN)
+        .in(PRODUCT_PRODUCT_COLUMN, partNumbers);
+
+      if (productsError || !products?.length) {
+        console.error("Error al obtener productos:", productsError);
+        throw new Error(BACKEND_ERROR_MESSAGE);
+      }
+
+      const relations = products.map((p) => ({
+        mda,
+        product: p[PRODUCT_PRODUCT_COLUMN],
+      }));
+
+      const { error: relError } = await supabase
+        .from(PRODUCT_X_MODEL_TABLE)
+        .insert(relations);
+
+      if (relError) {
+        throw new Error(BACKEND_ERROR_MESSAGE);
+      }
     } catch (error) {
       const message = getErrorMessage(error);
       throw new Error(message);

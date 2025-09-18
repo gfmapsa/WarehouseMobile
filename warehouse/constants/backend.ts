@@ -21,3 +21,6 @@ export const REMOVE_MDA_KEY = "remove-mda";
 
 export const PRODUCTS_TABLE = "product";
 export const PRODUCT_PRODUCT_COLUMN = "cod";
+
+export const GET_MODELS_KEY = "get-models";
+export const ADD_MODELS_KEY = "add-model";

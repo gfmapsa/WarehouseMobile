@@ -1,4 +1,5 @@
 import useLoadFonts from "@/shared/hooks/useLoadFonts";
+import ScannerHeader from "@/warehouse/components/scanner/ScannerHeader";
 import TanstackProvider from "@/warehouse/context/TanstackProvider";
 import WarehouseProvider from "@/warehouse/context/WarehouseProvider";
 import { Stack } from "expo-router";
@@ -30,13 +31,15 @@ export default function RootLayout() {
     <RootProvider>
       <Stack
         screenOptions={{
-          headerShown: false,
           gestureEnabled: false,
           gestureDirection: "vertical",
         }}
       >
-        <Stack.Screen name="(drawer)" />
-        <Stack.Screen name="scanner" />
+        <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="scanner"
+          options={{ header: () => <ScannerHeader />, headerTransparent: true }}
+        />
       </Stack>
     </RootProvider>
   );

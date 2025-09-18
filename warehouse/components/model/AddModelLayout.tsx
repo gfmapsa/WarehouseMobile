@@ -33,20 +33,17 @@ export default function AddModelLayout() {
         name="partNumbers"
         label="Pieza"
         data={partNumbers ?? []}
-        loading={isLoading}
-        getLabel={(item) => item}
-        renderOption={(item) => <AppText>{item}</AppText>}
+        isLoading={isLoading}
         onSearch={function (query: string): void {
           console.log("holi");
         }}
+        getLabel={function (item: string): string {
+          return item;
+        }}
+        renderOption={function (item: string): React.ReactNode {
+          return <AppText>{item}</AppText>;
+        }}
       />
-      {/* <AppButton
-        className="mt-4"
-        onClick={handleSubmit(onSubmit)}
-        isLoading={isPending}
-      >
-        Enviar
-      </AppButton> */}
     </View>
   );
 }

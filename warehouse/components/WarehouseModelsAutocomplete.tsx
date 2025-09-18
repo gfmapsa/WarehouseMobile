@@ -23,7 +23,7 @@ export default function WarehouseModelsAutocomplete({
       setValue={setValue}
       onSearch={handleSearch}
       onSelect={handleSelect}
-      loading={isLoading}
+      isLoading={isLoading}
       getLabel={(item) => item.mda}
       renderOption={(item) => {
         const modelCell = cells.find((cell) =>

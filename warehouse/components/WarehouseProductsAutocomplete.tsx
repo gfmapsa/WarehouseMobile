@@ -24,7 +24,7 @@ export default function WarehouseProductsAutocomplete({
       setValue={setValue}
       onSearch={handleSearch}
       onSelect={handleSelect}
-      loading={isLoading}
+      isLoading={isLoading}
       getLabel={(item) => item.cod}
       renderOption={(item) => {
         const productCell = cells.find((cell) =>

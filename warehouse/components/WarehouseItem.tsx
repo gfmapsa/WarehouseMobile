@@ -29,7 +29,7 @@ export type WarehouseItemHandle = {
 };
 
 const BG_COLOR = "white";
-const SUCCESS_COLOR = Colors.success;
+const SUCCESS_COLOR = Colors.successVariant;
 const TIMING = 300;
 const DELAY = 500;
 

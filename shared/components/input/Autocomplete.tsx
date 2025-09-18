@@ -12,32 +12,27 @@ import {
 import { ActivityIndicator, TextInput } from "react-native-paper";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import AppText from "../text/AppText";
+import AppInput, { AppInputProps } from "./AppInput";
 
-type AutocompleteProps<T> = {
-  label: string;
+export type AutocompleteProps<T> = {
   data: T[];
-  value: string;
-  setValue: (val: string) => void;
-  onSearch: (query: string) => void;
-  onSelect: (item: T) => void;
-  loading?: boolean;
+  onSearch?: (query: string) => void;
+  onSelect?: (item: T) => void;
   getLabel: (item: T) => string;
   renderOption: (item: T) => React.ReactNode;
 };
 
-const RADIUS = 8;
-
 export default function Autocomplete<T>({
-  label,
   data,
   value,
   setValue,
   onSearch,
   onSelect,
-  loading = false,
+  isLoading = false,
   getLabel,
   renderOption,
-}: AutocompleteProps<T>) {
+  ...props
+}: AutocompleteProps<T> & AppInputProps) {
   const [showList, setShowList] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [inputHeight, setInputHeight] = useState(0);
@@ -50,26 +45,25 @@ export default function Autocomplete<T>({
   const handleSelectOption = (item: T) => {
     Keyboard.dismiss();
     setValue(getLabel(item));
-    onSelect(item);
+    onSelect && onSelect(item);
     setShowList(false);
     setIsFocused(false);
   };
 
   const handleClear = () => {
     setValue("");
-    onSearch("");
+    onSearch && onSearch("");
     setShowList(false);
   };
 
   return (
     <View style={[styles.container, isFocused && { zIndex: 2000 }]}>
-      <TextInput
-        mode="flat"
-        label={<AppText style={{ opacity: 0.8 }}>{label}</AppText>}
+      <AppInput
+        {...props}
         value={value}
+        setValue={setValue}
         onChangeText={(text) => {
-          setValue(text);
-          onSearch(text);
+          onSearch && onSearch(text);
           setShowList(true);
         }}
         onFocus={() => {
@@ -84,7 +78,7 @@ export default function Autocomplete<T>({
         }
         onLayout={handleLayout}
         right={
-          loading ? (
+          isLoading ? (
             <TextInput.Icon
               icon={() => <ActivityIndicator color={Colors.primary} />}
             />
@@ -97,16 +91,11 @@ export default function Autocomplete<T>({
             />
           ) : null
         }
-        style={styles.input}
-        underlineStyle={{ display: "none" }}
-        textColor={Colors.primary}
-        activeUnderlineColor={Colors.primary}
-        theme={{ roundness: RADIUS }}
       />
 
       {showList && (
         <>
-          {data.length > 0 && !loading ? (
+          {data.length > 0 && !isLoading ? (
             <FlatList
               style={[styles.dropdown, { top: inputHeight }]}
               keyboardShouldPersistTaps="handled"
@@ -127,7 +116,7 @@ export default function Autocomplete<T>({
               ]}
             >
               <AppText style={styles.fallbackText}>
-                {loading ? "Buscando...." : "No se encontraron resultados"}
+                {isLoading ? "Buscando...." : "No se encontraron resultados"}
               </AppText>
             </View>
           )}
@@ -143,13 +132,6 @@ const styles = StyleSheet.create({
     shadowColor: "black",
     shadowOpacity: 0.3,
     shadowRadius: 5,
-  },
-
-  input: {
-    backgroundColor: "white",
-    borderColor: Colors.primary,
-    borderRadius: RADIUS,
-    elevation: 5,
   },
 
   dropdown: {

@@ -17,23 +17,24 @@ export default function FormText<T extends FieldValues>({
       name={name}
       control={control}
       render={({ field, fieldState }) => (
-        <AppInput
-          {...props}
-          value={field.value}
-          setValue={field.onChange}
-          onChangeText={(text) => {
-            field.onChange(text);
-            props.onChangeText?.(text);
-          }}
-          onBlur={field.onBlur}
-          error={!!fieldState.error}
-        >
+        <>
+          <AppInput
+            {...props}
+            value={field.value}
+            setValue={field.onChange}
+            onChangeText={(text) => {
+              field.onChange(text);
+              props.onChangeText?.(text);
+            }}
+            onBlur={field.onBlur}
+            error={!!fieldState.error}
+          />
           {fieldState.error && (
             <HelperText type="error" visible={!!fieldState.error}>
               {fieldState.error.message}
             </HelperText>
           )}
-        </AppInput>
+        </>
       )}
     />
   );

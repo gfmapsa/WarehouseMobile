@@ -8,3 +8,4 @@ export const BACKEND_SUCCESS: BackendGenericResponse = {
 
 export const BACKEND_ERROR_MESSAGE =
   "Ocurrio un error inesperado. Por favor, intente de nuevo más tarde";
+

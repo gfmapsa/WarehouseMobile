@@ -20,6 +20,7 @@ export default function AppInput({
   label,
   children,
   isLoading,
+  style,
   ...props
 }: AppInputProps) {
   return (
@@ -32,7 +33,7 @@ export default function AppInput({
         setValue(text);
         onChangeText && onChangeText(text);
       }}
-      style={styles.input}
+      style={[styles.input, style]}
       underlineStyle={{ display: "none" }}
       textColor={Colors.primary}
       activeUnderlineColor={Colors.primary}

@@ -4,10 +4,12 @@ import React from "react";
 import { GestureResponderEvent, StyleSheet, TextStyle } from "react-native";
 import { Button, ButtonProps } from "react-native-paper";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import LoadingSpinner from "../feedback/LoadingSpinner";
 import AppText from "../text/AppText";
 
 export type AppButtonProps = ButtonProps & {
   textStyle?: TextStyle;
+  isLoading?: boolean;
 };
 
 export default function AppButton({
@@ -16,6 +18,7 @@ export default function AppButton({
   rippleColor,
   onPress,
   textStyle,
+  isLoading,
   ...props
 }: AppButtonProps) {
   function handlePress(e: GestureResponderEvent) {
@@ -31,9 +34,13 @@ export default function AppButton({
       onPress={handlePress}
       style={[styles.container, style]}
     >
-      <AppText mode="bold" style={[styles.text, textStyle]}>
-        {children}
-      </AppText>
+      {isLoading ? (
+        <LoadingSpinner size={hp("3%")} />
+      ) : (
+        <AppText mode="bold" style={[styles.text, textStyle]}>
+          {children}
+        </AppText>
+      )}
     </Button>
   );
 }

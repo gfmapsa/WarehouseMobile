@@ -1,10 +1,5 @@
-import React from "react";
-import { Text, View } from "react-native";
+import ReportsLayout from "@/shared/components/reports/ReportsLayout";
 
 export default function ReportScreen() {
-  return (
-    <View>
-      <Text>report</Text>
-    </View>
-  );
+  return <ReportsLayout />;
 }

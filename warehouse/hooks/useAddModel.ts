@@ -1,3 +1,4 @@
+import { useSnackbar } from "@/shared/hooks/useSnackbar";
 import useModelsRepository from "@/warehouse/hooks/useModelsRepository";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -63,6 +64,8 @@ export default function useAddModel(code?: string) {
 
   const [message, setMessage] = useState("");
 
+  const { onDismiss, onVisible, visible } = useSnackbar();
+
   async function onSubmit(data: AddModelData) {
     try {
       await mutateAsync(data);
@@ -72,6 +75,7 @@ export default function useAddModel(code?: string) {
       setMessage(message);
     } finally {
       reset({ mda: "", partNumbers: [] });
+      onVisible();
     }
   }
 
@@ -86,5 +90,7 @@ export default function useAddModel(code?: string) {
     isPending,
     onChangeMda,
     setSearchQuery,
+    onDismiss,
+    visible,
   };
 }

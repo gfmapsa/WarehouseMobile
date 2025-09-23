@@ -1,3 +1,4 @@
+import SharedProvider from "@/shared/context/SharedProvider";
 import useLoadFonts from "@/shared/hooks/useLoadFonts";
 import ScannerHeader from "@/warehouse/components/scanner/ScannerHeader";
 import TanstackProvider from "@/warehouse/context/TanstackProvider";
@@ -19,7 +20,9 @@ function RootProvider({ children }: PropsWithChildren) {
     <GestureHandlerRootView>
       <PaperProvider>
         <TanstackProvider>
-          <WarehouseProvider>{children}</WarehouseProvider>
+          <SharedProvider>
+            <WarehouseProvider>{children}</WarehouseProvider>
+          </SharedProvider>
         </TanstackProvider>
       </PaperProvider>
     </GestureHandlerRootView>

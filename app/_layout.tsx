@@ -17,15 +17,15 @@ function RootProvider({ children }: PropsWithChildren) {
   }
 
   return (
-    <GestureHandlerRootView>
-      <PaperProvider>
-        <TanstackProvider>
-          <SharedProvider>
-            <WarehouseProvider>{children}</WarehouseProvider>
-          </SharedProvider>
-        </TanstackProvider>
-      </PaperProvider>
-    </GestureHandlerRootView>
+      <GestureHandlerRootView>
+        <PaperProvider>
+          <TanstackProvider>
+            <SharedProvider>
+              <WarehouseProvider>{children}</WarehouseProvider>
+            </SharedProvider>
+          </TanstackProvider>
+        </PaperProvider>
+      </GestureHandlerRootView>
   );
 }
 

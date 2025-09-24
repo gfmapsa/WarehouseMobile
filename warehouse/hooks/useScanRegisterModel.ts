@@ -2,6 +2,7 @@ import { getErrorMessage } from "@/shared/utils/functions";
 import { useMutation } from "@tanstack/react-query";
 import { Code, CodeScannerFrame } from "react-native-vision-camera";
 import { REGISTER_MDA_KEY } from "../constants/backend";
+import useScanSnack from "../store/useScanSnack";
 import useWarehouseRepository from "./useWarehouseRepository";
 
 export default function useScanRegisterModel(
@@ -9,7 +10,7 @@ export default function useScanRegisterModel(
   mda?: string
 ) {
   const { warehouseRepository } = useWarehouseRepository();
-  // const { setResult, onVisible } = useScanSnack();
+  const { setResult, onVisible } = useScanSnack();
 
   const { mutateAsync, isPending } = useMutation({
     mutationKey: [REGISTER_MDA_KEY, mda],
@@ -31,8 +32,8 @@ export default function useScanRegisterModel(
 
     try {
       await mutateAsync({ mda, ubication });
-      // setResult("Maqueta registrada correctamente", "success");
-      // setTimeout(() => onVisible(), 300);
+      setResult("Maqueta registrada correctamente", "success");
+      setTimeout(() => onVisible(), 300);
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       throw new Error(errorMessage);

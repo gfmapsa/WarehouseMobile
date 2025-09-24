@@ -4,10 +4,14 @@ import { getErrorMessage } from "@/shared/utils/functions";
 import {
   MODEL_MDA_COLUMN,
   MODEL_MODULES_COLUMN,
+  MODEL_WAREHOUSE_CELL_COLUMN,
   MODELS_TABLE,
   PRODUCT_PRODUCT_COLUMN,
   PRODUCT_X_MODEL_TABLE,
   PRODUCTS_TABLE,
+  SUBGROUP_PRINCIPAL_MDA_COLUMN,
+  SUBGROUP_SUBGROUP_MDA_COLUMM,
+  SUBGROUPS_TABLE,
 } from "../constants/backend";
 import { ModelScan } from "../dtos/warehouse";
 import { AddModelData } from "../hooks/useAddModel";
@@ -22,7 +26,9 @@ export class ModelsRepository implements IModelsRepository {
 
       const { data: existing, error: findError } = await supabase
         .from(MODELS_TABLE)
-        .select(`${MODEL_MDA_COLUMN}, ${MODEL_MODULES_COLUMN}`)
+        .select(
+          `${MODEL_MDA_COLUMN}, ${MODEL_MODULES_COLUMN}, ${MODEL_WAREHOUSE_CELL_COLUMN}`
+        )
         .eq(MODEL_MDA_COLUMN, mda)
         .maybeSingle();
 
@@ -37,6 +43,7 @@ export class ModelsRepository implements IModelsRepository {
       const response: ModelScan = {
         mda: existing.mda,
         modules: existing.modules,
+        cell: existing.warehouse_cell,
       };
 
       return response;
@@ -96,7 +103,6 @@ export class ModelsRepository implements IModelsRepository {
         .single();
 
       if (modelError || !modelData) {
-        console.error("Error al insertar modelo:", modelError);
         throw new Error(BACKEND_ERROR_MESSAGE);
       }
 
@@ -106,7 +112,6 @@ export class ModelsRepository implements IModelsRepository {
         .in(PRODUCT_PRODUCT_COLUMN, partNumbers);
 
       if (productsError || !products?.length) {
-        console.error("Error al obtener productos:", productsError);
         throw new Error(BACKEND_ERROR_MESSAGE);
       }
 
@@ -126,5 +131,22 @@ export class ModelsRepository implements IModelsRepository {
       const message = getErrorMessage(error);
       throw new Error(message);
     }
+  }
+
+  async getSubgroups(mda: string): Promise<string[]> {
+    if (!mda.toUpperCase().startsWith("MDA")) {
+      throw new Error("Ingrese un código válido por favor.");
+    }
+
+    const { data, error } = await supabase
+      .from(SUBGROUPS_TABLE)
+      .select(SUBGROUP_SUBGROUP_MDA_COLUMM)
+      .eq(SUBGROUP_PRINCIPAL_MDA_COLUMN, mda);
+
+    if (error) throw new Error(BACKEND_ERROR_MESSAGE);
+
+    const mdas = data.map((subgroup) => subgroup.subgroup_mda as string);
+
+    return mdas;
   }
 }

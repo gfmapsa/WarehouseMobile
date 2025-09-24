@@ -4,8 +4,8 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import {
-    heightPercentageToDP as hp,
-    widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import { BoxProps } from "./CameraBox";
 import RefreshIcon from "./RefreshIcon";
@@ -21,6 +21,8 @@ export default function ScannerCard({
   badScanMessage,
   scannedModules,
   reset,
+  scannedSubgroups,
+  subgroups,
 }: BoxProps) {
   return (
     <Animated.View
@@ -29,10 +31,12 @@ export default function ScannerCard({
       style={styles.container}
     >
       <Ionicons name="qr-code-outline" size={hp("5%")} color={Colors.primary} />
-      {!badScanMessage && scannedMda && (
+      {!badScanMessage && (scannedMda || subgroups) && (
         <ScannerInfoMda
           scannedMda={scannedMda}
           scannedModules={scannedModules}
+          subgroups={subgroups}
+          scannedSubgroups={scannedSubgroups}
         />
       )}
       {isLoading ? (
@@ -42,7 +46,8 @@ export default function ScannerCard({
           isRegister={isRegister}
           registerScanned={registerScanned}
           badScanMessage={badScanMessage}
-          hasScan={scannedModules === scannedMda?.modules}
+          hasScan={!scannedMda}
+          subgroups={!scannedModules && subgroups.size > 0}
         />
       )}
       <RefreshIcon reset={reset} />

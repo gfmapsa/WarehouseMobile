@@ -3,6 +3,7 @@ import { getErrorMessage } from "@/shared/utils/functions";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { REMOVE_MDA_KEY } from "../constants/backend";
+import useScanSnack from "../store/useScanSnack";
 import useWarehouseRepository from "./useWarehouseRepository";
 
 export default function useScanRemoveModel(
@@ -12,7 +13,7 @@ export default function useScanRemoveModel(
   trigger?: boolean
 ) {
   const { warehouseRepository } = useWarehouseRepository();
-  // const { setResult, onVisible } = useScanSnack();
+  const { setResult, onVisible } = useScanSnack();
 
   const { mutateAsync, isPending } = useMutation({
     mutationKey: [REMOVE_MDA_KEY, mda],
@@ -25,8 +26,8 @@ export default function useScanRemoveModel(
 
       try {
         await mutateAsync(mda);
-        // setResult("Maqueta retirada correctamente", "success");
-        // setTimeout(() => onVisible(), 300);
+        setResult("Maqueta retirada correctamente", "success");
+        setTimeout(() => onVisible(), 300);
       } catch (error) {
         const errorMessage = getErrorMessage(error);
         throw new Error(errorMessage);

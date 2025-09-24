@@ -4,8 +4,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useRef } from "react";
 import { Animated, StyleSheet, View } from "react-native";
 import {
-    heightPercentageToDP as hp,
-    widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import ScannerCard from "./ScannerCard";
 
@@ -17,6 +17,8 @@ export type BoxProps = {
   badScanMessage?: string;
   scannedModules?: number;
   reset: () => void;
+  subgroups: Set<string>;
+  scannedSubgroups: Set<string>;
 };
 
 type Props = {

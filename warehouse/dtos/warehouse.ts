@@ -9,4 +9,5 @@ export type WarehouseResponse = {
 export type ModelScan = {
   mda: string;
   modules: number;
+  cell: number | null;
 };

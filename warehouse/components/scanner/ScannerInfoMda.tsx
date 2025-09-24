@@ -1,15 +1,21 @@
 import AppText from "@/shared/components/text/AppText";
 import { ModelScan } from "@/warehouse/dtos/warehouse";
-import React from "react";
 import { StyleSheet } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 type Props = {
   scannedMda?: ModelScan;
   scannedModules?: number;
+  subgroups?: Set<string>;
+  scannedSubgroups?: Set<string>;
 };
 
-export default function ScannerInfoMda({ scannedMda, scannedModules }: Props) {
+export default function ScannerInfoMda({
+  scannedMda,
+  scannedModules,
+  subgroups,
+  scannedSubgroups,
+}: Props) {
   return (
     <Animated.View
       entering={FadeIn.duration(400)}
@@ -17,14 +23,24 @@ export default function ScannerInfoMda({ scannedMda, scannedModules }: Props) {
       style={styles.container}
     >
       <AppText style={styles.title}>{scannedMda?.mda}</AppText>
-
-      {!!scannedModules &&
+      {subgroups &&
+      subgroups.size > 0 &&
+      scannedMda &&
+      !scannedModules &&
+      scannedSubgroups &&
+      subgroups.size > scannedSubgroups?.size ? (
+        <AppText style={styles.modules}>
+          Subgrupos escaneados: {scannedSubgroups?.size}/{subgroups.size}
+        </AppText>
+      ) : (
+        !!scannedModules &&
         scannedMda &&
         scannedModules !== scannedMda.modules && (
           <AppText style={styles.modules}>
             Módulos escaneados: {scannedModules}/{scannedMda?.modules}
           </AppText>
-        )}
+        )
+      )}
     </Animated.View>
   );
 }

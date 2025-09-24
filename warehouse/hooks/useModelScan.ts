@@ -1,20 +1,22 @@
+import { BACKEND_ERROR_MESSAGE } from "@/shared/constants/backend";
 import { getErrorMessage } from "@/shared/utils/functions";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { Code, CodeScannerFrame } from "react-native-vision-camera";
 import { ModelScan } from "../dtos/warehouse";
 import useReloadWarehose from "../store/useReloadWarehouse";
+import useScanSnack from "../store/useScanSnack";
 import useModelsRepository from "./useModelsRepository";
 import { WarehouseModelActions } from "./useQrScanner";
 import useScanRegisterModel from "./useScanRegisterModel";
 import useScanRemoveModel from "./useScanRemoveModel";
+import useScanSubgroups from "./useScanSubgroups";
 
 export default function useModelScan(action: WarehouseModelActions) {
   const [scannedMda, setScannedMda] = useState<ModelScan | undefined>();
   const [scanning, setScanning] = useState(false);
   const [cooldown, setCooldown] = useState(false);
   const [mdasSet, setMdasSet] = useState<Set<string>>(new Set());
-  const [trigger, setTrigger] = useState(false);
   const [badScanMessage, setBadScanMessage] = useState("");
 
   useEffect(() => {
@@ -28,10 +30,25 @@ export default function useModelScan(action: WarehouseModelActions) {
   const [notFoundMda, setNotFoundMda] = useState(false);
   const [notFounded, setNotFounded] = useState("");
 
+  const {
+    handleSubgroups,
+    scannedSubgroups,
+    setScannedSubgroups,
+    subgroups,
+    setSubgroups,
+    trigger,
+    setTrigger,
+  } = useScanSubgroups(setBadScanMessage, scannedMda?.mda);
+
   function resetAll() {
     setScannedMda(undefined);
     setMdasSet(new Set());
     setTrigger(false);
+    setScannedSubgroups(new Set());
+    setSubgroups(new Set());
+    setBadScanMessage("");
+    setNotFoundMda(false);
+    setNotFounded("");
   }
 
   function resetNotFoundMda() {
@@ -59,6 +76,11 @@ export default function useModelScan(action: WarehouseModelActions) {
 
       const model = await modelsRepository.getModel(foundMda);
 
+      if (isRegister && model.cell != null) {
+        setBadScanMessage("Esa maqueta ya se encuentra registrada");
+        return;
+      }
+
       mdasSet.add(scannedText);
 
       setScannedMda(model);
@@ -68,7 +90,6 @@ export default function useModelScan(action: WarehouseModelActions) {
       }
 
       setMdasSet(new Set());
-      setTrigger(true);
     } catch {
       setNotFoundMda(true);
       setNotFounded(scannedText);
@@ -76,7 +97,9 @@ export default function useModelScan(action: WarehouseModelActions) {
   }
 
   const isRegister = action === "register";
-  const hasToRegister = scannedMda && mdasSet.size === 0;
+  const allModulesScanned = mdasSet.size === 0 && scannedMda;
+  const hasToRegister =
+    allModulesScanned && scannedSubgroups.size === subgroups.size;
   const registerScanned = isRegister && hasToRegister ? true : false;
 
   const { reload } = useReloadWarehose();
@@ -103,14 +126,19 @@ export default function useModelScan(action: WarehouseModelActions) {
 
   const isLoading = isRegistering || isRemoving;
 
-  // const { setResult, onVisible } = useScanSnack();
+  const { setResult, onVisible } = useScanSnack();
 
   async function scan(codes: Code[], frame: CodeScannerFrame) {
     if (!codes || codes.length === 0 || !codes[0].value) return;
 
     if (cooldown || isLoading) return;
 
-    const handler = registerScanned ? handleRegister : handleScan;
+    const handler = registerScanned
+      ? handleRegister
+      : allModulesScanned
+      ? handleSubgroups
+      : handleScan;
+
     setScanning(true);
     setTimeout(() => setScanning(false), 1000);
 
@@ -123,8 +151,8 @@ export default function useModelScan(action: WarehouseModelActions) {
       }, 5000);
     } catch (error) {
       const errorMessage = getErrorMessage(error);
-      // setResult(errorMessage ?? BACKEND_ERROR_MESSAGE, "error");
-      // setTimeout(() => onVisible(), 300);
+      setResult(errorMessage ?? BACKEND_ERROR_MESSAGE, "error");
+      setTimeout(() => onVisible(), 300);
     }
   }
 
@@ -141,5 +169,7 @@ export default function useModelScan(action: WarehouseModelActions) {
     notFounded,
     scannedModules: mdasSet.size,
     reset: resetAll,
+    scannedSubgroups,
+    subgroups,
   };
 }

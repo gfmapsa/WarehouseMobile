@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Maquetas",
-    "slug": "Maquetas",
+    "slug": "warehouse-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

@@ -9,6 +9,7 @@ type Props = {
   isRegister?: boolean;
   badScanMessage?: string;
   hasScan?: boolean;
+  subgroups?: boolean;
 };
 
 export default function ScannerInfoBadge({
@@ -16,6 +17,7 @@ export default function ScannerInfoBadge({
   registerScanned,
   badScanMessage,
   hasScan,
+  subgroups,
 }: Props) {
   const referenceText = isRegister ? "registrar" : "retirar";
 
@@ -26,6 +28,8 @@ export default function ScannerInfoBadge({
           ? "la celda de la maqueta"
           : hasScan
           ? `la maqueta a ${referenceText}`
+          : subgroups
+          ? `los subgrupos de la maqueta a ${referenceText}`
           : `los módulos de la maqueta a ${referenceText}`
       }`;
 

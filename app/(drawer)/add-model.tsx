@@ -1,5 +1,8 @@
 import AddModelLayout from "@/warehouse/components/model/AddModelLayout";
+import { useLocalSearchParams } from "expo-router";
 
 export default function AddModelScreen() {
-  return <AddModelLayout />;
+  const { code } = useLocalSearchParams();
+
+  return <AddModelLayout code={code as string} />;
 }

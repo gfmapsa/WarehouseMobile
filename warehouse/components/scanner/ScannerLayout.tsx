@@ -5,12 +5,13 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import {
-    Camera,
-    useCameraDevice,
-    useCameraPermission,
-    useCodeScanner,
+  Camera,
+  useCameraDevice,
+  useCameraPermission,
+  useCodeScanner,
 } from "react-native-vision-camera";
 import CameraBox from "./CameraBox";
+import NotFoundDialog from "./NotFoundDialog";
 
 type Props = {
   action: WarehouseModelActions;
@@ -21,7 +22,14 @@ export default function ScannerLayout({ action }: Props) {
   const { hasPermission, requestPermission } = useCameraPermission();
   const navigation = useNavigation();
 
-  const { scan, scanning, ...props } = useModelScan(action);
+  const {
+    scan,
+    scanning,
+    notFoundMda,
+    notFounded,
+    resetNotFoundMda,
+    ...props
+  } = useModelScan(action);
 
   const codeScanner = useCodeScanner({
     codeTypes: ["qr"],
@@ -62,6 +70,11 @@ export default function ScannerLayout({ action }: Props) {
         codeScanner={codeScanner}
       />
       <CameraBox {...props} scanning={scanning} />
+      <NotFoundDialog
+        open={notFoundMda}
+        code={notFounded}
+        onClose={resetNotFoundMda}
+      />
     </>
   );
 }

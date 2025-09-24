@@ -4,11 +4,13 @@ import Form from "@/shared/components/layout/Form";
 import AppText from "@/shared/components/text/AppText";
 import useAddModel, { AddModelData } from "@/warehouse/hooks/useAddModel";
 import React from "react";
-import {
-  heightPercentageToDP as hp
-} from "react-native-responsive-screen";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
-export default function AddModelLayout() {
+type Props = {
+  code?: string;
+};
+
+export default function AddModelLayout({ code }: Props) {
   const {
     control,
     handleSubmit,
@@ -22,7 +24,7 @@ export default function AddModelLayout() {
     setSearchQuery,
     onDismiss,
     visible,
-  } = useAddModel();
+  } = useAddModel(code);
 
   return (
     <Form

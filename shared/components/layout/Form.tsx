@@ -3,7 +3,13 @@ import {
     SUCCESS_FORM,
 } from "@/shared/constants/backend";
 import { PropsWithChildren } from "react";
-import { StyleSheet, View, ViewStyle } from "react-native";
+import {
+    Keyboard,
+    StyleSheet,
+    TouchableWithoutFeedback,
+    View,
+    ViewStyle,
+} from "react-native";
 import {
     heightPercentageToDP as hp,
     widthPercentageToDP as wp,
@@ -40,12 +46,17 @@ export default function Form({
 
   return (
     <>
-      <View style={[styles.container, containerStyle]}>
-        <View style={[styles.form, formStyle]}>{children}</View>
-        <AppButton onPress={onSubmit} isLoading={isPending}>
-          {buttonText}
-        </AppButton>
-      </View>
+      <TouchableWithoutFeedback
+        style={StyleSheet.absoluteFill}
+        onPress={() => Keyboard.dismiss()}
+      >
+        <View style={[styles.container, containerStyle]}>
+          <View style={[styles.form, formStyle]}>{children}</View>
+          <AppButton onPress={onSubmit} isLoading={isPending}>
+            {buttonText}
+          </AppButton>
+        </View>
+      </TouchableWithoutFeedback>
       <AppSnackbar
         visible={snackVisible}
         onDismiss={onDismissSnack}

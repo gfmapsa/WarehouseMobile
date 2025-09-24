@@ -1,5 +1,6 @@
 import { BACKEND_ERROR_MESSAGE } from "@/shared/constants/backend";
 import { getErrorMessage } from "@/shared/utils/functions";
+import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { Code, CodeScannerFrame } from "react-native-vision-camera";
@@ -79,6 +80,9 @@ export default function useModelScan(action: WarehouseModelActions) {
       if (isRegister && model.cell != null) {
         setBadScanMessage("Esa maqueta ya se encuentra registrada");
         return;
+      } else if (!isRegister && model.cell == null) {
+        setBadScanMessage("Esa maqueta no se encuentra registrada");
+        return;
       }
 
       mdasSet.add(scannedText);
@@ -140,6 +144,7 @@ export default function useModelScan(action: WarehouseModelActions) {
       : handleScan;
 
     setScanning(true);
+    Haptics.selectionAsync();
     setTimeout(() => setScanning(false), 1000);
 
     try {

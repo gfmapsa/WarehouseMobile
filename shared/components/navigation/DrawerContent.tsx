@@ -6,11 +6,14 @@ import DrawerItem from "./DrawerItem";
 
 export default function DrawerContent({
   navigation,
+  state,
 }: DrawerContentComponentProps) {
   function handleNavigate(path: string) {
     Haptics.selectionAsync();
     navigation.navigate(path);
   }
+
+  const activeRoute = state.routes[state.index].name;
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -19,13 +22,22 @@ export default function DrawerContent({
         style={styles.image}
       />
       <View>
-        <DrawerItem onPress={() => handleNavigate("index")}>
+        <DrawerItem
+          onPress={() => handleNavigate("index")}
+          active={activeRoute === "index"}
+        >
           Deposito
         </DrawerItem>
-        <DrawerItem onPress={() => handleNavigate("add-model")}>
+        <DrawerItem
+          onPress={() => handleNavigate("add-model")}
+          active={activeRoute === "add-model"}
+        >
           Registrar maqueta
         </DrawerItem>
-        <DrawerItem onPress={() => handleNavigate("report")}>
+        <DrawerItem
+          onPress={() => handleNavigate("report")}
+          active={activeRoute === "report"}
+        >
           Problemas/Mejoras
         </DrawerItem>
       </View>

@@ -14,10 +14,7 @@ export default function _layout() {
         name="add-model"
         options={{ title: "Registrar maqueta" }}
       />
-      <Drawer.Screen
-        name="report"
-        options={{ title: "Problemas/Sugerencias" }}
-      />
+      <Drawer.Screen name="report" options={{ title: "Reportar/Sugerir" }} />
     </Drawer>
   );
 }

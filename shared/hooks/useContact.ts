@@ -2,6 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Keyboard } from "react-native";
 import * as yup from "yup";
 import { REPORT_KEY } from "../constants/backend";
 import { getErrorMessage } from "../utils/functions";
@@ -38,6 +39,7 @@ export default function useContact() {
   const { onDismiss, onVisible, visible } = useSnackbar();
 
   async function onSubmit(data: ContactData) {
+    Keyboard.dismiss();
     try {
       await mutateAsync(data);
       setIsError(false);

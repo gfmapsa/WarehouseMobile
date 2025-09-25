@@ -6,4 +6,5 @@ export interface IModelsRepository {
   addModel(model: AddModelData): Promise<void>;
   getModel(mda: string): Promise<ModelScan>;
   getSubgroups(mda: string): Promise<string[]>;
+  addProduct(code: string): Promise<void>;
 }

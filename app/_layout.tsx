@@ -7,7 +7,15 @@ import { Stack } from "expo-router";
 import { PropsWithChildren } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { PaperProvider } from "react-native-paper";
-import "react-native-reanimated";
+import {
+  configureReanimatedLogger,
+  ReanimatedLogLevel,
+} from "react-native-reanimated";
+
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false,
+});
 
 function RootProvider({ children }: PropsWithChildren) {
   const { loaded } = useLoadFonts();
@@ -17,15 +25,15 @@ function RootProvider({ children }: PropsWithChildren) {
   }
 
   return (
-      <GestureHandlerRootView>
-        <PaperProvider>
-          <TanstackProvider>
-            <SharedProvider>
-              <WarehouseProvider>{children}</WarehouseProvider>
-            </SharedProvider>
-          </TanstackProvider>
-        </PaperProvider>
-      </GestureHandlerRootView>
+    <GestureHandlerRootView>
+      <PaperProvider>
+        <TanstackProvider>
+          <SharedProvider>
+            <WarehouseProvider>{children}</WarehouseProvider>
+          </SharedProvider>
+        </TanstackProvider>
+      </PaperProvider>
+    </GestureHandlerRootView>
   );
 }
 

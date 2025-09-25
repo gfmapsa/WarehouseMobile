@@ -35,6 +35,12 @@ export default function DrawerContent({
           Registrar maqueta
         </DrawerItem>
         <DrawerItem
+          onPress={() => handleNavigate("add-product")}
+          active={activeRoute === "add-product"}
+        >
+          Registrar producto
+        </DrawerItem>
+        <DrawerItem
           onPress={() => handleNavigate("report")}
           active={activeRoute === "report"}
         >

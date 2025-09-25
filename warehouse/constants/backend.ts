@@ -24,6 +24,7 @@ export const PRODUCT_PRODUCT_COLUMN = "cod";
 
 export const GET_MODELS_KEY = "get-models";
 export const ADD_MODELS_KEY = "add-model";
+export const ADD_PRODUCT_KEY = "add-product";
 
 export const SUBGROUPS_TABLE = "subgroup";
 export const SUBGROUP_SUBGROUP_MDA_COLUMM = "subgroup_mda";

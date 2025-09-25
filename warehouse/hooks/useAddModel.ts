@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Keyboard } from "react-native";
 import * as yup from "yup";
 import { getErrorMessage } from "../../shared/utils/functions";
 import { ADD_MODELS_KEY, GET_MODELS_KEY } from "../constants/backend";
@@ -67,6 +68,7 @@ export default function useAddModel(code?: string) {
   const { onDismiss, onVisible, visible } = useSnackbar();
 
   async function onSubmit(data: AddModelData) {
+    Keyboard.dismiss();
     try {
       await mutateAsync(data);
       setMessage("Maqueta agregada correctamente!");

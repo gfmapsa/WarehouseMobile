@@ -149,4 +149,18 @@ export class ModelsRepository implements IModelsRepository {
 
     return mdas;
   }
+
+  async addProduct(code: string): Promise<void> {
+    const { error } = await supabase
+      .from(PRODUCTS_TABLE)
+      .insert([{ cod: code.toUpperCase() }]);
+
+    if (error) {
+      if (error.code === "23505") {
+        throw new Error(`El producto con código ${code} ya existe.`);
+      }
+
+      throw new Error(BACKEND_ERROR_MESSAGE);
+    }
+  }
 }

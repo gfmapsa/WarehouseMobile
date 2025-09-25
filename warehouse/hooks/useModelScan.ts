@@ -40,6 +40,8 @@ export default function useModelScan(action: WarehouseModelActions) {
     setBadScanMessage("");
     setNotFoundMda(false);
     setNotFounded("");
+    setScanning(false);
+    setReceivedMda(undefined);
   }
 
   function resetNotFoundMda() {
@@ -101,6 +103,7 @@ export default function useModelScan(action: WarehouseModelActions) {
     setSubgroups,
     trigger,
     setTrigger,
+    setReceivedMda,
   } = useScanSubgroups(setBadScanMessage, scannedMda?.mda, allModulesScanned);
 
   const hasSubgroups = subgroups.size > 0;
@@ -112,11 +115,11 @@ export default function useModelScan(action: WarehouseModelActions) {
   const { reload } = useReloadWarehose();
 
   async function handleRefresh() {
+    router.push("/(drawer)");
+    reload && reload();
     setScanning(false);
     setScannedMda(undefined);
     setTrigger(false);
-    router.push("/(drawer)");
-    reload && reload();
   }
 
   const { handleRegister, isRegistering } = useScanRegisterModel(

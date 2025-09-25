@@ -38,7 +38,7 @@ export default function useScanSubgroups(
   }, [mda]);
 
   useEffect(() => {
-    getSubgroups();
+    if (receivedMda) getSubgroups();
   }, [receivedMda]);
 
   useEffect(() => {
@@ -78,5 +78,6 @@ export default function useScanSubgroups(
     setSubgroups,
     trigger,
     setTrigger,
+    setReceivedMda,
   };
 }

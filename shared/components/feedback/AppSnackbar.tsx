@@ -100,8 +100,10 @@ const styles = StyleSheet.create({
   },
 
   info: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     gap: wp("4%"),
+    paddingRight: wp("12%"),
   },
 });

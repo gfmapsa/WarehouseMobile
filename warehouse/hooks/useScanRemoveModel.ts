@@ -1,4 +1,4 @@
-// import useScanSnack from "@/store/useScanSnack";
+import { BACKEND_ERROR_MESSAGE } from "@/shared/constants/backend";
 import { getErrorMessage } from "@/shared/utils/functions";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
@@ -30,7 +30,8 @@ export default function useScanRemoveModel(
         setTimeout(() => onVisible(), 300);
       } catch (error) {
         const errorMessage = getErrorMessage(error);
-        throw new Error(errorMessage);
+        setResult(errorMessage ?? BACKEND_ERROR_MESSAGE, "error");
+        setTimeout(() => onVisible(), 300);
       } finally {
         handleRefresh();
       }

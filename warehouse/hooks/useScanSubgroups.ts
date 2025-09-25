@@ -6,7 +6,8 @@ import useModelsRepository from "./useModelsRepository";
 
 export default function useScanSubgroups(
   setBadScanMessage: React.Dispatch<React.SetStateAction<string>>,
-  mda?: string
+  mda?: string,
+  allModulesScanned?: boolean
 ) {
   const [receivedMda, setReceivedMda] = useState(mda);
   const [scannedSubgroups, setScannedSubgroups] = useState<Set<string>>(
@@ -39,6 +40,12 @@ export default function useScanSubgroups(
   useEffect(() => {
     getSubgroups();
   }, [receivedMda]);
+
+  useEffect(() => {
+    if (allModulesScanned && subgroups.size === 0) {
+      setTrigger(true);
+    }
+  }, [allModulesScanned]);
 
   async function handleSubgroups(codes: Code[], _: CodeScannerFrame) {
     if (!mda || !subgroups) throw new Error(BACKEND_ERROR_MESSAGE);

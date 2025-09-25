@@ -31,16 +31,6 @@ export default function useModelScan(action: WarehouseModelActions) {
   const [notFoundMda, setNotFoundMda] = useState(false);
   const [notFounded, setNotFounded] = useState("");
 
-  const {
-    handleSubgroups,
-    scannedSubgroups,
-    setScannedSubgroups,
-    subgroups,
-    setSubgroups,
-    trigger,
-    setTrigger,
-  } = useScanSubgroups(setBadScanMessage, scannedMda?.mda);
-
   function resetAll() {
     setScannedMda(undefined);
     setMdasSet(new Set());
@@ -101,9 +91,22 @@ export default function useModelScan(action: WarehouseModelActions) {
   }
 
   const isRegister = action === "register";
-  const allModulesScanned = mdasSet.size === 0 && scannedMda;
+  const allModulesScanned = mdasSet.size === 0 && scannedMda !== undefined;
+
+  const {
+    handleSubgroups,
+    scannedSubgroups,
+    setScannedSubgroups,
+    subgroups,
+    setSubgroups,
+    trigger,
+    setTrigger,
+  } = useScanSubgroups(setBadScanMessage, scannedMda?.mda, allModulesScanned);
+
+  const hasSubgroups = subgroups.size > 0;
+  const subgroupsScanneds = subgroups.size === scannedSubgroups.size;
   const hasToRegister =
-    allModulesScanned && scannedSubgroups.size === subgroups.size;
+    allModulesScanned && (!hasSubgroups || subgroupsScanneds);
   const registerScanned = isRegister && hasToRegister ? true : false;
 
   const { reload } = useReloadWarehose();

@@ -2,7 +2,7 @@ import { Colors } from "@/shared/constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Snackbar, SnackbarProps } from "react-native-paper";
+import { Portal, Snackbar, SnackbarProps } from "react-native-paper";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import AppText from "../text/AppText";
 
@@ -26,62 +26,75 @@ export default function AppSnackbar({
   }
 
   return (
-    <Snackbar
-      {...props}
-      onDismiss={onDismiss}
-      style={[
-        {
-          backgroundColor:
-            severity === "error"
-              ? Colors.danger
-              : severity === "success"
-              ? Colors.success
-              : Colors.primaryVariant,
-        },
-      ]}
-    >
-      <View style={styles.container}>
-        <View style={styles.info}>
-          {severity === "error" ? (
-            <Ionicons
-              name="alert-circle-outline"
-              size={24}
-              color={Colors.dangerVariant}
-            />
-          ) : severity === "success" ? (
-            <Ionicons
-              name="checkmark-circle-outline"
-              size={24}
-              color={Colors.successVariant}
-            />
-          ) : (
-            <AppText>⏳</AppText>
-          )}
+    <Portal>
+      <Snackbar
+        {...props}
+        onDismiss={onDismiss}
+        style={[
+          {
+            backgroundColor:
+              severity === "error"
+                ? Colors.danger
+                : severity === "success"
+                ? Colors.success
+                : Colors.primaryVariant,
+          },
+        ]}
+      >
+        <View style={styles.container}>
+          <View style={styles.info}>
+            {severity === "error" ? (
+              <Ionicons
+                name="alert-circle-outline"
+                size={24}
+                color={Colors.dangerVariant}
+              />
+            ) : severity === "success" ? (
+              <Ionicons
+                name="checkmark-circle-outline"
+                size={24}
+                color={Colors.successVariant}
+              />
+            ) : (
+              <AppText>⏳</AppText>
+            )}
 
-          <AppText
-            style={{
-              color:
+            <AppText
+              style={{
+                color:
+                  severity === "error"
+                    ? Colors.dangerVariant
+                    : severity === "success"
+                    ? Colors.successVariant
+                    : Colors.primary,
+              }}
+            >
+              {children}
+            </AppText>
+          </View>
+          <TouchableOpacity onPress={handleDismiss}>
+            <Ionicons
+              name="close-circle-outline"
+              size={24}
+              color={
                 severity === "error"
                   ? Colors.dangerVariant
                   : severity === "success"
                   ? Colors.successVariant
-                  : Colors.primary,
-            }}
-          >
-            {children}
-          </AppText>
+                  : Colors.primary
+              }
+            />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={handleDismiss}>
-          <Ionicons name="close-circle-outline" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-    </Snackbar>
+      </Snackbar>
+    </Portal>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
+    flexWrap: "wrap",
     alignItems: "center",
     justifyContent: "space-between",
   },

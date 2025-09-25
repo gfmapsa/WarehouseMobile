@@ -4,6 +4,7 @@ import { View } from "react-native";
 import useScrollLayout from "../hooks/useScrollLayout";
 import useWarehouse from "../hooks/useWarehouse";
 import { WarehouseCell } from "../models/WarehouseCell";
+import useScanSnack from "../store/useScanSnack";
 import Warehouse from "./Warehouse";
 
 export type WarehouseSectionProps = {
@@ -23,6 +24,7 @@ export type WarehouseSearchProps = WarehouseSelectCellProp &
 export default function WarehouseLayout() {
   const { data, isLoading, isError } = useWarehouse();
   const { warehouseMapRef, itemsRef, scrollToCell } = useScrollLayout();
+  const { visible, message, onHidde, status } = useScanSnack();
 
   if (isError) return <AppError />;
 
@@ -57,6 +59,13 @@ export default function WarehouseLayout() {
         )}
       </Warehouse>
       {!isLoading && <Warehouse.Actions />}
+      <Warehouse.Snackbar
+        visible={visible}
+        onDismiss={onHidde}
+        severity={status}
+      >
+        {message}
+      </Warehouse.Snackbar>
     </>
   );
 }

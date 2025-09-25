@@ -3,6 +3,7 @@ import WarehouseActions from "./WarehouseActions";
 import WarehouseMap from "./WarehouseMap";
 import WarehouseSearch from "./WarehouseSearch";
 import WarehouseSkeleton from "./WarehouseSkeleton";
+import WarehouseSnackbar from "./WarehouseSnackbar";
 
 export default function Warehouse({ style, ...props }: ViewProps) {
   return <View {...props} style={[styles.container, style]} />;
@@ -19,3 +20,4 @@ Warehouse.Map = WarehouseMap;
 Warehouse.Search = WarehouseSearch;
 Warehouse.Loading = WarehouseSkeleton;
 Warehouse.Actions = WarehouseActions;
+Warehouse.Snackbar = WarehouseSnackbar;

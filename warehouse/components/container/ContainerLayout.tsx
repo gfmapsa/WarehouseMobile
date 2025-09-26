@@ -1,12 +1,12 @@
 import AppError from "@/shared/components/feedback/AppError";
+import useScrollLayout from "@/warehouse/hooks/useScrollLayout";
+import { WarehouseContainerResponse } from "@/warehouse/interfaces/IWarehouseRepository";
+import { WarehouseCell } from "@/warehouse/models/WarehouseCell";
+import useScanSnack from "@/warehouse/store/useScanSnack";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import React, { RefObject } from "react";
 import { View } from "react-native";
-import { WarehouseResponse } from "../dtos/warehouse";
-import useScrollLayout from "../hooks/useScrollLayout";
-import { WarehouseCell } from "../models/WarehouseCell";
-import useScanSnack from "../store/useScanSnack";
-import Warehouse from "./Warehouse";
+import Container from "./Container";
 
 export type WarehouseSectionProps = {
   cells: WarehouseCell[];
@@ -20,18 +20,18 @@ export type WarehouseSelectCellProp = {
 };
 
 type Props = {
-  data?: WarehouseResponse;
+  data?: WarehouseContainerResponse;
   isLoading: boolean;
   isError: boolean;
   refetch: (
     options?: RefetchOptions
-  ) => Promise<QueryObserverResult<WarehouseResponse, Error>>;
+  ) => Promise<QueryObserverResult<WarehouseContainerResponse, Error>>;
 };
 
 export type WarehouseSearchProps = WarehouseSelectCellProp &
   WarehouseSectionProps;
 
-export default function WarehouseLayout({
+export default function ContainerLayout({
   data,
   isLoading,
   isError,
@@ -44,46 +44,39 @@ export default function WarehouseLayout({
 
   return (
     <>
-      <Warehouse>
+      <Container>
         {isLoading || !data ? (
-          <Warehouse.Loading />
+          <Container.Loading />
         ) : (
           <>
-            <Warehouse.Search>
-              <Warehouse.Search.Models
+            <Container.Search>
+              <Container.Search.Models
                 cells={data.cells}
                 onSelect={scrollToCell}
               />
-              <Warehouse.Search.Products
+              <Container.Search.Products
                 cells={data.cells}
                 onSelect={scrollToCell}
               />
-            </Warehouse.Search>
-            <Warehouse.Map
+            </Container.Search>
+            <Container.Map
               ref={warehouseMapRef}
               itemsRef={itemsRef}
               refetch={refetch}
             >
-              <Warehouse.Map.Lateral
-                cells={data.lateralCells}
-                itemsRef={itemsRef}
-              />
-              <Warehouse.Map.Stands
-                cells={data.standCells}
-                itemsRef={itemsRef}
-              />
-            </Warehouse.Map>
+              <Container.Map.Stands cells={data.cells} itemsRef={itemsRef} />
+            </Container.Map>
           </>
         )}
-      </Warehouse>
-      {!isLoading && <Warehouse.Actions />}
-      <Warehouse.Snackbar
+      </Container>
+      {!isLoading && <Container.Actions />}
+      <Container.Snackbar
         visible={visible}
         onDismiss={onHidde}
         severity={status}
       >
         {message}
-      </Warehouse.Snackbar>
+      </Container.Snackbar>
     </>
   );
 }

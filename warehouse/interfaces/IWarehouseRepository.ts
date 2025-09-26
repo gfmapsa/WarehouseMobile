@@ -8,8 +8,13 @@ export type WarehouseResponse = {
   cells: WarehouseCell[];
 };
 
+export type WarehouseContainerResponse = {
+  cells: WarehouseCell[]
+}
+
 export interface IWarehouseRepository {
   getWarehouse(): Promise<WarehouseResponse>;
+  getContainer(): Promise<WarehouseContainerResponse>
   getModelsOutliers(searchTerm: string): Promise<Model[]>;
   getProductsOutliers(searchTerm: string): Promise<ProductSearch[]>;
   registerModel(mda: string, ubication: string): Promise<void>;

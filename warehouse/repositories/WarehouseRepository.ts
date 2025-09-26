@@ -11,6 +11,7 @@ import {
 } from "../constants/backend";
 import {
   IWarehouseRepository,
+  WarehouseContainerResponse,
   WarehouseResponse,
 } from "../interfaces/IWarehouseRepository";
 import { Model, ModelUbicationEnum } from "../models/Model";
@@ -28,7 +29,10 @@ type DbProduct = {
 export class WarehouseRepository implements IWarehouseRepository {
   async getWarehouse(): Promise<WarehouseResponse> {
     try {
-      const { data, error } = await supabase.from(WAREHOUSE_CELL_TABLE).select(`
+      const { data, error } = await supabase
+        .from(WAREHOUSE_CELL_TABLE)
+        .select(
+          `
         id,
         warehouse_section,
         row,
@@ -41,7 +45,9 @@ export class WarehouseRepository implements IWarehouseRepository {
             product
           )
         )
-      `);
+      `
+        )
+        .lte("id", 46); // El 46 es el ultimo id del deposito (ya se que no es lo ideal pero no tengo tiempo de mejorarlo)
 
       if (error) throw new Error(BACKEND_ERROR_MESSAGE);
 
@@ -84,6 +90,64 @@ export class WarehouseRepository implements IWarehouseRepository {
         lateralCells,
         cells,
       };
+
+      return response;
+    } catch {
+      throw new Error(BACKEND_ERROR_MESSAGE);
+    }
+  }
+
+  async getContainer(): Promise<WarehouseContainerResponse> {
+    try {
+      const { data, error } = await supabase
+        .from(WAREHOUSE_CELL_TABLE)
+        .select(
+          `
+        id,
+        warehouse_section,
+        row,
+        column,
+        models:model (
+          mda,
+          description,
+          modules,
+          products:productxmodel (
+            product
+          )
+        )
+      `
+        )
+        .gt("id", 46); // A partir del 46, el container
+
+      if (error) throw new Error(BACKEND_ERROR_MESSAGE);
+
+      const cells = data.map((cell) => {
+        const models = cell.models.map((cellModel) => {
+          const products = cellModel.products.map(
+            (prod) => prod.product as string
+          );
+
+          return new Model(
+            cellModel.mda,
+            ModelUbicationEnum.Deposito,
+            products,
+            cellModel.description,
+            cellModel.modules
+          );
+        });
+
+        const section = cell.warehouse_section as WarehouseSectionEnum;
+
+        return new WarehouseCell(
+          cell.id,
+          section,
+          models,
+          cell.row,
+          cell.column
+        );
+      });
+
+      const response: WarehouseContainerResponse = { cells };
 
       return response;
     } catch {

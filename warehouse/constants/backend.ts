@@ -3,6 +3,7 @@ export const MODELS_TABLE = "model";
 export const WAREHOUSE_CELL_TABLE = "warehouse_cell";
 
 export const WAREHOUSE_KEY = "warehouse";
+export const CONTAINER_KEY = "container";
 
 export const MODEL_MDA_COLUMN = "mda";
 export const MODEL_UBICATION_COLUMN = "ubication";

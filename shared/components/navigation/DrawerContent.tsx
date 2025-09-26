@@ -29,6 +29,12 @@ export default function DrawerContent({
           Deposito
         </DrawerItem>
         <DrawerItem
+          onPress={() => handleNavigate("container")}
+          active={activeRoute === "container"}
+        >
+          Contenedor
+        </DrawerItem>
+        <DrawerItem
           onPress={() => handleNavigate("add-model")}
           active={activeRoute === "add-model"}
         >

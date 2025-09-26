@@ -10,6 +10,7 @@ export default function _layout() {
       drawerContent={(props) => <DrawerContent {...props} />}
     >
       <Drawer.Screen name="index" options={{ title: "Deposito" }} />
+      <Drawer.Screen name="container" options={{ title: "Contenedor" }} />
       <Drawer.Screen
         name="add-model"
         options={{ title: "Registrar maqueta" }}

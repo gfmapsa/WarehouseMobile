@@ -1,8 +1,8 @@
+import { Colors } from "@/shared/constants/colors";
 import { RefObject } from "react";
 import { Model, ModelUbicationEnum } from "../models/Model";
 import { ProductSearch } from "../models/ProductSearch";
 import { WarehouseCell } from "../models/WarehouseCell";
-import { Colors } from "@/constants/colors";
 
 export default function useAnimateCell(
   cells: WarehouseCell[],
@@ -37,13 +37,13 @@ export default function useAnimateCell(
     cellElement?.animate(
       [
         { scale: 1, backgroundColor: "white" },
-        { scale: 1.2, backgroundColor: Colors.lightGreen },
-        { scale: 1.2, backgroundColor: Colors.lightGreen,},
-        { scale: 1.2, backgroundColor: Colors.lightGreen,},
-        { scale: 1.2, backgroundColor: Colors.lightGreen,},
-        { scale: 1.2, backgroundColor: Colors.lightGreen, },
-        { scale: 1.2, backgroundColor: Colors.lightGreen,},
-        { scale: 1.2, backgroundColor: Colors.lightGreen, },
+        { scale: 1.2, backgroundColor: Colors.successVariant },
+        { scale: 1.2, backgroundColor: Colors.successVariant },
+        { scale: 1.2, backgroundColor: Colors.successVariant },
+        { scale: 1.2, backgroundColor: Colors.successVariant },
+        { scale: 1.2, backgroundColor: Colors.successVariant },
+        { scale: 1.2, backgroundColor: Colors.successVariant },
+        { scale: 1.2, backgroundColor: Colors.successVariant },
         { scale: 1, backgroundColor: "white" },
       ],
       {

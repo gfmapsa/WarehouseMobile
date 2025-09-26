@@ -115,8 +115,8 @@ export default function useModelScan(action: WarehouseModelActions) {
   const { reload } = useReloadWarehose();
 
   async function handleRefresh() {
-    router.push("/(drawer)");
-    reload && reload();
+    router.back();
+    setTimeout(() => reload && reload(), 300);
     setScanning(false);
     setScannedMda(undefined);
     setTrigger(false);

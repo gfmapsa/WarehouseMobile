@@ -22,7 +22,7 @@ export type WarehouseSearchProps = WarehouseSelectCellProp &
   WarehouseSectionProps;
 
 export default function WarehouseLayout() {
-  const { data, isLoading, isError } = useWarehouse();
+  const { data, isLoading, isError, refetch } = useWarehouse();
   const { warehouseMapRef, itemsRef, scrollToCell } = useScrollLayout();
   const { visible, message, onHidde, status } = useScanSnack();
 
@@ -45,7 +45,11 @@ export default function WarehouseLayout() {
                 onSelect={scrollToCell}
               />
             </Warehouse.Search>
-            <Warehouse.Map ref={warehouseMapRef} itemsRef={itemsRef}>
+            <Warehouse.Map
+              ref={warehouseMapRef}
+              itemsRef={itemsRef}
+              refetch={refetch}
+            >
               <Warehouse.Map.Lateral
                 cells={data.lateralCells}
                 itemsRef={itemsRef}

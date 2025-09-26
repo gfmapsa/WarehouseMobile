@@ -115,11 +115,11 @@ export default function useModelScan(action: WarehouseModelActions) {
   const { reload } = useReloadWarehose();
 
   async function handleRefresh() {
-    router.back();
-    setTimeout(() => reload && reload(), 300);
     setScanning(false);
     setScannedMda(undefined);
     setTrigger(false);
+    setTimeout(() => reload && reload(), 300);
+    router.back();
   }
 
   const { handleRegister, isRegistering } = useScanRegisterModel(

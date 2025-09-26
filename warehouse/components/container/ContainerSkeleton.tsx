@@ -15,20 +15,25 @@ export default function ContainerSkeleton() {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={{ paddingBottom: 200, gap: 40 }}
+      contentContainerStyle={{
+        paddingBottom: 200,
+        gap: 40,
+      }}
     >
       <View style={styles.inputContainer}>
         <Skeleton height={INPUT_HEIGHT} width={"100%"} />
         <Skeleton height={INPUT_HEIGHT} width={"100%"} />
       </View>
-      <View style={styles.stands}>
-        {Array.from({ length: 27 }).map((_, index) => (
-          <Skeleton
-            key={index}
-            height={WAREHOUSE_CELL_SIZE}
-            width={WAREHOUSE_CELL_SIZE}
-          />
-        ))}
+      <View style={styles.standsContainer}>
+        <View style={styles.stands}>
+          {Array.from({ length: 27 }).map((_, index) => (
+            <Skeleton
+              key={index}
+              height={WAREHOUSE_CELL_SIZE}
+              width={WAREHOUSE_CELL_SIZE}
+            />
+          ))}
+        </View>
       </View>
     </ScrollView>
   );
@@ -37,6 +42,10 @@ export default function ContainerSkeleton() {
 const styles = StyleSheet.create({
   inputContainer: {
     gap: 20,
+  },
+
+  standsContainer: {
+    alignItems: "center",
   },
 
   stands: {

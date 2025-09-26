@@ -49,6 +49,8 @@ export default function ScannerLayout({ action }: Props) {
     checkPermission();
   }, [hasPermission, requestPermission, navigation]);
 
+  if (hasPermission == null || device == null) return null;
+
   if (!hasPermission) {
     return null;
   }
